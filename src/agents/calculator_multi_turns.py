@@ -1,8 +1,8 @@
 import os
-from typing import Dict
-from oci.addons.adk import Agent, AgentClient, tool
 from pathlib import Path
 from dotenv import load_dotenv
+from oci.addons.adk import Agent, AgentClient
+from oci.addons.adk.tool.prebuilt import CalculatorToolkit
 
 # ────────────────────────────────────────────────────────
 # 1) bootstrap paths + env + llm
@@ -15,53 +15,45 @@ load_dotenv(PROJECT_ROOT / "config/.env")  # expects OCI_ vars in .env
 # Set up the OCI GenAI Agents endpoint configuration
 AGENT_EP_ID = os.getenv("AGENT_EP_ID")
 AGENT_SERVICE_EP = os.getenv("AGENT_SERVICE_EP")
+AGENT_KB_ID = os.getenv("AGENT_KB_ID")
 
 # ────────────────────────────────────────────────────────
 # 2) Logic
 # ────────────────────────────────────────────────────────
 
-# Use @tool to signal that this Python function is a function tool.
-# Apply standard docstring to provide function and parameter descriptions.
-@tool
-def get_weather(location: str) -> Dict[str, str]:
-    """
-    Get the weather for a given location.
 
-    Args:
-      location(str): The location for which weather is queried
-    """
-    return {"location": location, "temperature": 72, "unit": "F"}
+def agent_flow():
 
-
-def main():
-    # Create an agent client with your authentication and region details
-    # Replace the auth_type with your desired authentication method.
     client = AgentClient(
         auth_type="api_key",
         profile="DEFAULT",
-        region="us-chicago-1",
+        region="us-chicago-1"
     )
 
-    # Create a local agent object with the client, instructions, and tools.
-    # You also need the agent endpoint id. To obtain the OCID, follow Step 1.
     agent = Agent(
         client=client,
         agent_endpoint_id=AGENT_EP_ID,
-        instructions="You perform weather queries using tools.",
-        tools=[get_weather]
+        instructions="You perform calculations using tools provided.",
+        tools=[CalculatorToolkit()]
     )
 
-    # Sync local instructions and tools to the remote agent resource
-    # You only need to invoke setup() when you change instructions and tools
     agent.setup()
+    return agent
 
-    # Run the agent. You can embed this method in your webapp, slack bot, etc.
-    # You invoke the run() when you need to handle your user's request.
-    input = "Is it cold in Seattle?"
-    response = agent.run(input)
+def test_cases():
 
-    # Print the response
+    agent = agent_flow()
+
+    # First turn (here we start a new session)
+    input = "What is the square root of 256?"
+    response = agent.run(input, max_steps=3)
+    #print(response)
+    response.pretty_print()
+
+    # Second turn (here we use the same session from last run)
+    input = "do the same thing for 81"
+    response = agent.run(input, session_id=response.session_id, max_steps=3)
     response.pretty_print()
 
 if __name__ == "__main__":
-    main()
+    test_cases()

@@ -1,1 +1,3 @@
+oci
 oci[adk]
+streamlit
