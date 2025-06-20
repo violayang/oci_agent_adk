@@ -10,7 +10,7 @@ from oci.addons.adk.tool.prebuilt import AgenticRagTool
 # 1) bootstrap paths + env + llm
 # ────────────────────────────────────────────────────────
 THIS_DIR     = Path(__file__).resolve()
-PROJECT_ROOT = THIS_DIR.parent.parent
+PROJECT_ROOT = THIS_DIR.parent.parent.parent
 
 load_dotenv(PROJECT_ROOT / "config/.env")  # expects OCI_ vars in .env
 
@@ -18,6 +18,7 @@ load_dotenv(PROJECT_ROOT / "config/.env")  # expects OCI_ vars in .env
 AGENT_EP_ID = os.getenv("AGENT_EP_ID")
 AGENT_SERVICE_EP = os.getenv("AGENT_SERVICE_EP")
 AGENT_KB_ID = os.getenv("AGENT_KB_ID")
+AGENT_REGION = os.getenv("AGENT_REGION")
 
 # ────────────────────────────────────────────────────────
 # 2) Logic
@@ -25,14 +26,10 @@ AGENT_KB_ID = os.getenv("AGENT_KB_ID")
 
 def agent_flow():
 
-    # Assuming the resources were already provisioned
-    agent_endpoint_id = AGENT_EP_ID
-    knowledge_base_id = AGENT_KB_ID
-
     client = AgentClient(
         auth_type="api_key",
         profile="DEFAULT",
-        region="us-chicago-1"
+        region=AGENT_REGION
     )
 
     instructions = """
@@ -44,10 +41,10 @@ def agent_flow():
 
     agent = Agent(
         client=client,
-        agent_endpoint_id=agent_endpoint_id,
+        agent_endpoint_id=AGENT_EP_ID,
         instructions=instructions,
         tools=[
-            AgenticRagTool(knowledge_base_ids=[knowledge_base_id]),
+            AgenticRagTool(knowledge_base_ids=[AGENT_KB_ID]),
             AccountToolkit()
         ]
     )

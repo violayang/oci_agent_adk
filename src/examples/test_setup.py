@@ -1,4 +1,4 @@
-import os
+import os, json, sys
 from typing import Dict
 from oci.addons.adk import Agent, AgentClient, tool
 from pathlib import Path
@@ -8,13 +8,15 @@ from dotenv import load_dotenv
 # 1) bootstrap paths + env + llm
 # ────────────────────────────────────────────────────────
 THIS_DIR     = Path(__file__).resolve()
-PROJECT_ROOT = THIS_DIR.parent.parent
-
+PROJECT_ROOT = THIS_DIR.parent.parent.parent
+print(PROJECT_ROOT)
 load_dotenv(PROJECT_ROOT / "config/.env")  # expects OCI_ vars in .env
 
 # Set up the OCI GenAI Agents endpoint configuration
+AGENT_ID = os.getenv("AGENT_ID")
 AGENT_EP_ID = os.getenv("AGENT_EP_ID")
-AGENT_SERVICE_EP = os.getenv("AGENT_SERVICE_EP")
+AGENT_REGION = os.getenv("AGENT_REGION")
+AGENT_COMPARTMENT_ID = os.getenv("AGENT_COMPARTMENT_ID")
 
 # ────────────────────────────────────────────────────────
 # 2) Logic
@@ -32,6 +34,26 @@ def get_weather(location: str) -> Dict[str, str]:
     """
     return {"location": location, "temperature": 72, "unit": "F"}
 
+# remove tool after testing of initial setup
+def list_tools():
+
+    # Create a client with your authentication details
+    client = AgentClient(
+        auth_type="api_key",
+        profile="DEFAULT",
+        region=AGENT_REGION
+    )
+
+    # Find the tools of the following agent in the following compartment
+    tool_list = client.find_tools(AGENT_COMPARTMENT_ID, AGENT_ID)
+
+    json_str = json.dumps(tool_list, indent=4)
+
+    print(json_str)
+
+    for item in tool_list:
+        print(f"Tool Name: {item.get('display_name')}  \nTool OCID: {item.get('id')}")
+
 
 def main():
     # Create an agent client with your authentication and region details
@@ -39,7 +61,7 @@ def main():
     client = AgentClient(
         auth_type="api_key",
         profile="DEFAULT",
-        region="us-chicago-1",
+        region=AGENT_REGION,
     )
 
     # Create a local agent object with the client, instructions, and tools.
@@ -65,3 +87,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    list_tools()

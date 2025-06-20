@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 THIS_DIR     = Path(__file__).resolve()
-PROJECT_ROOT = THIS_DIR.parent.parent
+PROJECT_ROOT = THIS_DIR.parent.parent.parent
 print(PROJECT_ROOT)
 load_dotenv(PROJECT_ROOT / "config/.env")
 
@@ -93,7 +93,7 @@ def extract_final_answer_from_chat_result(response_obj):
         return f"❌ Error: {e}"
 
 
-# if __name__ == "__main__":
-#     test_case()
+if __name__ == "__main__":
+    test_case()
 
 

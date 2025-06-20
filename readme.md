@@ -4,16 +4,15 @@ source .venv/bin/activate
 python3.13 -m pip install -r requirements.txt
 
 ## Installing the ADK
-### After you create a project and a virtual environment, install the latest version of ADK:
+#### After you create a project and a virtual environment, install the latest version of ADK:
 #requirements.txt
-pip install --upgrade "oci[adk]@https://artifactory.oci.oraclecorp.com:443/opc-public-sdk-dev-pypi-local/oci-2.154.1+preview.1.228-py3-none-any.whl"
 
 
 ## Authenticating your ADK app to OCI
-### The ADK provides an AgentClient class to simplify handling authentication and management of agent resources. Four authentication types are supported:
+#### The ADK provides an AgentClient class to simplify handling authentication and management of agent resources. Four authentication types are supported:
 
 ## API Key Authentication (Default)
-### API key authentication is the default and most common method for authenticating with OCI services.
+#### API key authentication is the default and most common method for authenticating with OCI services.
 
 from oci.addons.adk import AgentClient
 
@@ -25,6 +24,27 @@ client = AgentClient(
 
 ## Configuring and running an agent - Quick Test
 
-python3.13 -m src.examples.test_setup  
+>> python3.13 -m src.examples.test_setup  
+
+## Best practices to follow while building an agent. Below, you will see how to build an agent called 'taxagent' that has 2 tools - RAG Tool and a CustomFunction
+
+### Step 1: Build the tools required.
+
+>> CustomFunction --> src/tools/custom_function_tools.py
+>> RAG Tool --> oci.addons.adk.tool.prebuilt import AgenticRagTool
+
+## Build/Deploy the Agent - taxagent to GenAI Agent Service to manage deployment
+
+>> python3.13 -m src.agents.taxagent
+
+## Run/Test the API that will invoke the Agents deployed through GenAI Agent Service (remote)
+
+>>  python3.13 -m src.llm.api_genai_agent 
+
+## Run a streamilt app to execute the agent
+
+>> python3.13 -m streamlit run src/app/tax_assistant/ui_taxagent.py
+
+sample prompt : get tax m&e adjustment for entity 1000
 
 

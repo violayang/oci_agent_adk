@@ -10,7 +10,7 @@ from oci.addons.adk.tool.prebuilt import AgenticRagTool
 # 1) bootstrap paths + env + llm
 # ────────────────────────────────────────────────────────
 THIS_DIR     = Path(__file__).resolve()
-PROJECT_ROOT = THIS_DIR.parent.parent
+PROJECT_ROOT = THIS_DIR.parent.parent.parent
 
 load_dotenv(PROJECT_ROOT / "config/.env")  # expects OCI_ vars in .env
 
