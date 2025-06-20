@@ -1,7 +1,28 @@
 ### Configure your development environment
 
->>> 
-> 
+### Clone the repository
+git clone https://github.com/aojah1/adk_projects.git
+
+### Optional commands
+How to actually get Python 3.13 on macOS (change it for your machine)
+    1 Homebrew (simplest)
+    bash
+    
+    Edit
+    brew update
+    brew install python@3.13          # puts python3.13 in /opt/homebrew/bin
+    echo 'export PATH="/opt/homebrew/opt/python@3.13/bin:$PATH"' >> ~/.zshrc
+    exec $SHELL                       # reload shell so python3.13 is found
+    python3.13 --version              # → Python 3.13.x
+    2 pyenv (lets you switch versions)
+    bash
+    
+    Edit
+    brew install pyenv
+    pyenv install 3.13.0
+    pyenv global 3.13.0
+    python --version                  # now 3.13.0
+
 ### Configuring and running the agent
 >> python3.13 -m venv .venv
 > 
