@@ -8,16 +8,14 @@ How to actually get Python 3.13 on macOS (change it for your machine)
     1 Homebrew (simplest)
     bash
     
-    Edit
+    Option 1 :
     brew update
     brew install python@3.13          # puts python3.13 in /opt/homebrew/bin
     echo 'export PATH="/opt/homebrew/opt/python@3.13/bin:$PATH"' >> ~/.zshrc
     exec $SHELL                       # reload shell so python3.13 is found
     python3.13 --version              # → Python 3.13.x
-    2 pyenv (lets you switch versions)
-    bash
     
-    Edit
+    Option 2 : pyenv (lets you switch versions)
     brew install pyenv
     pyenv install 3.13.0
     pyenv global 3.13.0
@@ -76,4 +74,7 @@ client = AgentClient(
 
 sample prompt : get tax m&e adjustment for entity 1000
 
+### MCP Server - 
+Follow this instruction on how to deploy your tools into Oracle DataScience 
 
+https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data-science
