@@ -1,3 +1,7 @@
+### Configure your development environment
+
+>>> 
+> 
 ### Configuring and running the agent
 >> python3.13 -m venv .venv
 > 
