@@ -36,15 +36,15 @@ client = AgentClient(
 > 
 >> RAG Tool --> oci.addons.adk.tool.prebuilt import AgenticRagTool
 
-### Build/Deploy the Agent - taxagent to GenAI Agent Service to manage deployment
+#### Step 2: Build/Deploy the Agent - taxagent to GenAI Agent Service to manage deployment
 
 >> python3.13 -m src.agents.taxagent
 
-### Run/Test the API that will invoke the Agents deployed through GenAI Agent Service (remote)
+#### Step 3: Run/Test the API that will invoke the Agents deployed through GenAI Agent Service (remote)
 
 >>  python3.13 -m src.llm.api_genai_agent 
 
-### Run a streamilt app to execute the agent
+#### Step 4: Run a streamilt app to execute the agent
 
 >> python3.13 -m streamlit run src/app/tax_assistant/ui_taxagent.py
 
