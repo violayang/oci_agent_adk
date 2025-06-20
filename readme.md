@@ -1,9 +1,9 @@
 ### Configuring and running the agent
-python3.13 -m venv .venv
-source .venv/bin/activate
-python3.13 -m pip install -r requirements.txt
+>> python3.13 -m venv .venv
+>> source .venv/bin/activate
+>> python3.13 -m pip install -r requirements.txt
 
-## Installing the ADK
+## Installi ng the ADK
 #### After you create a project and a virtual environment, install the latest version of ADK:
 #requirements.txt
 
