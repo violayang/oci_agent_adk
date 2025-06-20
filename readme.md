@@ -29,6 +29,7 @@ client = AgentClient(
 >> python3.13 -m src.examples.test_setup  
 
 ### Best practices to follow while building an agent. Below, you will see how to build an agent called 'taxagent' that has 2 tools - RAG Tool and a CustomFunction
+![config/img.png](config/img.png)
 
 #### Step 1: Build the tools required.
 
