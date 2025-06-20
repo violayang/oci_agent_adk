@@ -5,6 +5,7 @@
 
 import oci
 import os
+import re
 from oci.generative_ai_agent_runtime import GenerativeAiAgentRuntimeClient
 from oci.generative_ai_agent_runtime.models import CreateSessionDetails
 
@@ -12,7 +13,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 THIS_DIR     = Path(__file__).resolve()
-PROJECT_ROOT = THIS_DIR.parent.parent.parent
+PROJECT_ROOT = THIS_DIR.parent.parent
 print(PROJECT_ROOT)
 load_dotenv(PROJECT_ROOT / "config/.env")
 
@@ -59,17 +60,40 @@ def rag_agent_service(inp: str):
             user_message=inp,
             session_id=sess_id))
 
-    #print(str(response.data))
-    #response = response.data.message.content.text
-    return response.data
+    return response
 
 # Test Cases -
 def test_case():
     #The logged in user ID is: user_123. What is the response API ?
-    response = rag_agent_service("The logged in user ID is: user_123. What is the response API ?")
-    print(response)
+    response = rag_agent_service("what is the tax M&E adjustment for entity 1000 ?")
 
-if __name__ == "__main__":
-    test_case()
+    print(response.data.message.content.text)
+
+    print("CITATIONS : " )
+    print(# Extract Citation URL
+    print(response.data.message.content.citations[0].source_location.url))
+
+    response = rag_agent_service("Is my user account eligible for the Responses API?")
+    final_answer = extract_final_answer_from_chat_result(response)
+    print("Final Answer:", final_answer)
+
+
+def extract_final_answer_from_chat_result(response_obj):
+    try:
+        chat_result = response_obj.data  # This is a ChatResult object
+        traces = getattr(chat_result, "traces", [])
+        for trace in traces:
+            if getattr(trace, "trace_type", None) == "PLANNING_TRACE":
+                output = getattr(trace, "output", "")
+                match = re.search(r'"action":\s*"Final Answer".*?"action_inputs":\s*"([^"]+)"', output, re.DOTALL)
+                if match:
+                    return match.group(1).strip()
+        return "❌ Final answer not found in planning trace."
+    except Exception as e:
+        return f"❌ Error: {e}"
+
+
+# if __name__ == "__main__":
+#     test_case()
 
 

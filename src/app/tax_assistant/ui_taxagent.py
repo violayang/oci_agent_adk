@@ -1,5 +1,5 @@
 import streamlit as st
-from api_taxagent import rag_agent_service
+from src.llm.api_genai_agent import rag_agent_service, extract_final_answer_from_chat_result
 
 
 # ─────────────────────── UI Layout ────────────────────────────
@@ -13,10 +13,17 @@ user_input = st.text_area("Enter your query:", height=150)
 if st.button("Ask"):
     if user_input.strip():
         try:
-            with st.spinner("Contacting Oracle RAG Agent..."):
+            with st.spinner("Contacting Oracle Tax Agent..."):
                 response = rag_agent_service(user_input)
                 st.success("Response received:")
-                st.write(response)
+
+                final_answer = extract_final_answer_from_chat_result(response)
+                if(final_answer):
+                    st.write("Final Answer: ", final_answer)
+                    # Extract Citation URL
+                    if (response.data.message):
+                        citation_url = response.data.message.content.citations[0].source_location.url
+                        st.write("Source URL:", citation_url)
         except Exception as e:
             st.error(f"❌ Error: {e}")
     else:

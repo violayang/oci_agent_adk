@@ -23,7 +23,7 @@ AGENT_KB_ID = os.getenv("AGENT_KB_ID")
 # 2) Logic
 # ────────────────────────────────────────────────────────
 
-def main():
+def agent_flow():
 
     # Assuming the resources were already provisioned
     agent_endpoint_id = AGENT_EP_ID
@@ -54,6 +54,13 @@ def main():
 
     agent.setup()
 
+    return agent
+
+
+def test_cases():
+
+    agent = agent_flow()
+
     # This is a context your existing code is best at producing (e.g., fetching the authenticated user id)
     client_provided_context = "[Context: The logged in user ID is: user_123] "
 
@@ -61,19 +68,24 @@ def main():
     input = "What is the Responses API"
     input = client_provided_context + " " + input
     response = agent.run(input)
-    response.pretty_print()
+    final_message = response.data["message"]["content"]["text"]
+    print(final_message)
+    # print(response.raw_data['message']['content']['text'])
+    # response.pretty_print()
 
     # Handle the second user turn of the conversation
     input = "Is my user account eligible for the Responses API?"
     input = client_provided_context + " " + input
     response = agent.run(input, session_id=response.session_id)
-    response.pretty_print()
+    final_message = response.data["message"]["content"]["text"]
+    print(final_message)
 
     # Call the RAG Service
     input = "what is the tax M&E adjustment for entity 1000 ?"
     response = agent.run(input)
-    response.pretty_print()
+    final_message = response.data["message"]["content"]["text"]
+    print(final_message)
 
 
 if __name__ == "__main__":
-    main()
+    test_cases()
