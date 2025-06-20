@@ -1,12 +1,14 @@
 ### Configuring and running the agent
 >> python3.13 -m venv .venv
+> 
 >> source .venv/bin/activate
+> 
 >> python3.13 -m pip install -r requirements.txt
 
-## Installi ng the ADK
-#### After you create a project and a virtual environment, install the latest version of ADK:
-#requirements.txt
+## Installing all the required packages
+#### After you create a project and a virtual environment, install the latest version of required packages:
 
+>> python3.13 -m pip install -r requirements.txt
 
 ## Authenticating your ADK app to OCI
 #### The ADK provides an AgentClient class to simplify handling authentication and management of agent resources. Four authentication types are supported:
