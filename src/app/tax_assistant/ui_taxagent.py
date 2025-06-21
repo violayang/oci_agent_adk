@@ -1,5 +1,5 @@
 import streamlit as st
-from src.llm.api_genai_agent import rag_agent_service, extract_final_answer_from_chat_result
+from src.app.tax_assistant.api_taxagent import tax_agent_orchestrator, extract_final_answer_from_chat_result
 
 
 # ─────────────────────── UI Layout ────────────────────────────
@@ -14,7 +14,7 @@ if st.button("Ask"):
     if user_input.strip():
         try:
             with st.spinner("Contacting Oracle Tax Agent..."):
-                response = rag_agent_service(user_input)
+                response = tax_agent_orchestrator(user_input)
                 st.success("Response received:")
 
                 final_answer = extract_final_answer_from_chat_result(response)

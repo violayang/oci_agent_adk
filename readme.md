@@ -66,7 +66,7 @@ client = AgentClient(
 
 #### Step 3: Run/Test the API that will invoke the Agents deployed through GenAI Agent Service (remote)
 
->>  python3.13 -m src.llm.api_genai_agent 
+>>  python3.13 -m src.app.tax_assistant.api_taxagent 
 
 #### Step 4: Run a streamilt app to execute the agent
 
@@ -74,7 +74,13 @@ client = AgentClient(
 
 sample prompt : get tax m&e adjustment for entity 1000
 
+#### Extra : If you want to learn how to expose an agent using FastAPI
+
+python3.13 -m uvicorn src.app.orderxhub.fastapi_orderx:app --reload
+
 ### MCP Server - 
 Follow this instruction on how to deploy your tools into Oracle DataScience 
 
 https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data-science
+
+##### -- Written by Anup Ojah, HPC&AI Leader, Oracle Cloud Engineering
