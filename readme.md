@@ -120,6 +120,39 @@ https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data
 #### vision_instruct_tools : 
 > Convert Image to Text tool
 
+### Prompt Engineering
+> Topics: 
+>> Topics define the scope, intent and purpose of an Agent. Topics further refine the Agent's scope and purpose - this is added to the system prompt in instructing an LLM 
+Use a consistent pather
+Subject Area >> Intent Recognition >> Conversational Flow >> Tool/System integrations >> Contextual Responses
+
+> System Prompt:
+>> Each agent has a system prompt. The system prompt defines the Agents personas and capabilities. It establishes the tool it can access. It also describe how the Agent should think about achieving any goals or task for which it was designed.
+Use a consistent pather
+CONTEXT >> ROLE >> OBJECTIVE >> FORMAT >> TONE / STYLE >> CONSTRAINTS
+
+### Agents
+> Agents handles specific task and is equipped with specific skills that enables it to carry out task. Consider this as a worker behind the scenes to perform actual actions or task that the agent is suppose to deliver to the user.
+Agent can connect to other systems, API's or tools, which allows the agent to utilize information from different data sources or business functions.
+
+### Agent Teams
+> A structured sequence of steps or actions that the AI Agent follows to accomplish a specific business task or answer a user query.
+Agentic AI patterns such as Supervisor and Swarm makes up an Agent Team.
+
+### Applications
+> An application is what gets deployed at the client side, for users or machines to interact with.
+> Apps can be exposed either as an API or a UI.
+
+### llm
+> One common place to configure all LLMs the application is going to leverage.
+
+### METRO
+> MONITORING >> EVALUATION >> TRACING >> REPORTING > OBSERVABILITY
 
 
-##### -- Written by Anup Ojah, HPC&AI Leader, Oracle Cloud Engineering
+
+
+##### -- Author: Anup Ojah, HPC&AI Leader, Oracle Cloud Engineering
+##### References:
+https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/adk/api-reference/introduction.htm
+https://www.oracle.com/applications/fusion-ai/ai-agents/
