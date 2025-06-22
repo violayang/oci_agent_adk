@@ -82,12 +82,6 @@ sample prompt : get tax m&e adjustment for entity 1000
 
 python3.13 -m uvicorn src.app.orderxhub.fastapi_orderx:app --reload
 
-### MCP Server - 
-Follow this instruction on how to deploy your tools into Oracle DataScience using MCP architecture
-
-https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data-science
-
-
 ### Available OOB Tools from this repo
 
 #### business_objects_tools :
@@ -128,7 +122,7 @@ Subject Area >> Intent Recognition >> Conversational Flow >> Tool/System integra
 
 > System Prompt:
 >> Each agent has a system prompt. The system prompt defines the Agents personas and capabilities. It establishes the tool it can access. It also describe how the Agent should think about achieving any goals or task for which it was designed.
-Use a consistent pather
+Use a consistent pattern : 
 CONTEXT >> ROLE >> OBJECTIVE >> FORMAT >> TONE / STYLE >> CONSTRAINTS
 
 ### Agents
@@ -148,6 +142,11 @@ Agentic AI patterns such as Supervisor and Swarm makes up an Agent Team.
 
 ### METRO
 > MONITORING >> EVALUATION >> TRACING >> REPORTING > OBSERVABILITY
+
+### MCP Server - 
+Follow this instruction on how to deploy your tools into Oracle DataScience using MCP architecture
+
+https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data-science
 
 
 
