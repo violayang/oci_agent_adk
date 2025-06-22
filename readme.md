@@ -51,7 +51,8 @@ client = AgentClient(
 
 >> python3.13 -m src.examples.test_setup  
 
-### Best practices to follow while building an agent. Below, you will see how to build an agent called 'taxagent' that has 2 tools - RAG Tool and a CustomFunction
+### Best practices to follow while building an agent. 
+#### Below, you will see how to build an agent called 'taxagent' that has 2 tools - RAG Tool and a CustomFunction
 ![config/img.png](config/img.png)
 
 #### Step 1: Build the tools required.
@@ -79,8 +80,44 @@ sample prompt : get tax m&e adjustment for entity 1000
 python3.13 -m uvicorn src.app.orderxhub.fastapi_orderx:app --reload
 
 ### MCP Server - 
-Follow this instruction on how to deploy your tools into Oracle DataScience 
+Follow this instruction on how to deploy your tools into Oracle DataScience using MCP architecture
 
 https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data-science
+
+
+### Available OOB Tools from this repo
+
+#### business_objects_tools :
+> retrieve data from application database and perform transactions on application business objects as defined in the application OpenAI Spec
+
+#### custom_function_tools :  
+> Custom functions based on Agents requirements
+
+#### deeplink_tools : 
+> Send an end user to user form interface to perform specific actions along with the required context
+
+#### document_tool : 
+> upload or reference unstructured documents for semantic search and retrieval upon which to ground an answer or response
+
+#### email_tools : 
+> Enable an Agent to write and send an email to a human receipt
+
+#### external_REST : 
+> Connect to any service to integrate any data and functionality with a public REST interface
+
+#### oci_rag_service_tools : 
+> OCI RAG agent pre-built service as a tool
+
+#### slack_tools : 
+> Enable an Agent to write and send a slack message to an organization channel
+
+#### speech_instruct_tools : 
+> Convert Speech to Text tool
+
+#### vision_instruct_tools : 
+> Convert Speech to Text tool
+
+
+
 
 ##### -- Written by Anup Ojah, HPC&AI Leader, Oracle Cloud Engineering

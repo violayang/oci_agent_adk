@@ -1,0 +1,1 @@
+# retrieve data from application database and perform transactions on application business objects as defined in the application OpenAI Spec

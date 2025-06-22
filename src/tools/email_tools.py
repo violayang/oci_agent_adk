@@ -1,0 +1,1 @@
+# Enable an Agent to write and send an email to a human receipt
