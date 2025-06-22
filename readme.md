@@ -1,6 +1,9 @@
 #### Understanding the Agentic Framework: A Blueprint for Autonomous system
 > https://github.com/aojah1/agents/blob/main/Agentic%20Framework_1.2_Feb03_MM_Anup.pdf
 
+### ADK REFERENCE ARCHITECTURE
+![config/img.png](images/adk_arch.png)
+
 ### Configure your development environment
 
 ### Clone the repository
@@ -56,7 +59,7 @@ client = AgentClient(
 
 ### Best practices to follow while building an agent. 
 #### Below, you will see how to build an agent called 'taxagent' that has 2 tools - RAG Tool and a CustomFunction
-![config/img.png](config/img.png)
+![config/img.png](images/agents_deploy.png)
 
 #### Step 1: Build the tools required.
 
@@ -99,7 +102,7 @@ python3.13 -m uvicorn src.app.orderxhub.fastapi_orderx:app --reload
 #### email_tools : 
 > Enable an Agent to write and send an email to a human receipt
 
-#### external_REST : 
+#### external_REST_tools : 
 > Connect to any service to integrate any data and functionality with a public REST interface
 
 #### oci_rag_service_tools : 
@@ -131,7 +134,7 @@ Agent can connect to other systems, API's or tools, which allows the agent to ut
 
 ### Agent Teams
 > A structured sequence of steps or actions that the AI Agent follows to accomplish a specific business task or answer a user query.
-Agentic AI patterns such as Supervisor and Swarm makes up an Agent Team.
+Workflow patterns such as Supervisor and Swarm makes up an Agent Team.
 
 ### Applications
 > An application is what gets deployed at the client side, for users or machines to interact with.
@@ -148,7 +151,8 @@ Follow this instruction on how to deploy your tools into Oracle DataScience usin
 
 https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data-science
 
-
+### MCP Client - 
+oci-2.154.1+preview.1.228
 
 
 ##### -- Author: Anup Ojah, HPC&AI Leader, Oracle Cloud Engineering
