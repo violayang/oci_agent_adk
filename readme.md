@@ -1,3 +1,6 @@
+#### Understanding the Agentic Framework: A Blueprint for Autonomous system
+> https://github.com/aojah1/agents/blob/main/Agentic%20Framework_1.2_Feb03_MM_Anup.pdf
+
 ### Configure your development environment
 
 ### Clone the repository
@@ -115,8 +118,7 @@ https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data
 > Convert Speech to Text tool
 
 #### vision_instruct_tools : 
-> Convert Speech to Text tool
-
+> Convert Image to Text tool
 
 
 
