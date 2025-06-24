@@ -3,7 +3,7 @@ from typing import Dict
 from oci.addons.adk import Agent, AgentClient, tool
 from pathlib import Path
 from dotenv import load_dotenv
-from src.tools.vision_instruct import image_to_text
+from src.tools.vision_instruct_tools import image_to_text
 
 # ────────────────────────────────────────────────────────
 # 1) bootstrap paths + env + llm

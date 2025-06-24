@@ -24,7 +24,7 @@ AGENT_REGION = os.getenv("AGENT_REGION")
 async def main():
 
     params = StreamableHttpParameters(
-        url="http://0.0.0.0:8000/mcp",
+        url="https://59f6-104-48-173-98.ngrok-free.app/mcp",
     )
 
     async with MCPClientStreamableHttp(
@@ -33,7 +33,7 @@ async def main():
     ) as mcp_client:
 
         client = AgentClient(
-            auth_type="security_token",
+            auth_type="api_key",
             profile="DEFAULT",
             region=AGENT_REGION
         )

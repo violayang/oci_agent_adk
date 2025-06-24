@@ -1,3 +1,5 @@
+### Oracle Agent Development Kit (ADK) for building Agentic AI applications
+
 #### Understanding the Agentic Framework: A Blueprint for Autonomous system
 > https://github.com/aojah1/agents/blob/main/Agentic%20Framework_1.2_Feb03_MM_Anup.pdf
 
@@ -159,3 +161,4 @@ oci-2.154.1+preview.1.228
 ##### References:
 https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/adk/api-reference/introduction.htm
 https://www.oracle.com/applications/fusion-ai/ai-agents/
+https://docs.oracle.com/en/solutions/ai-fraud-detection/index.html
