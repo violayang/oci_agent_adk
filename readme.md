@@ -65,10 +65,12 @@ Change the config variables based on your agents requirements
 
 #### Step 1: Build the tools required.
 
->> CustomFunction --> 
+CustomFunction --> 
+
     src/tools/custom_function_tools.py
-> 
->> RAG Tool --> 
+
+RAG Tool --> 
+
     oci.addons.adk.tool.prebuilt import AgenticRagTool
 
 #### Step 2: Build/Deploy the Agent - taxagent to GenAI Agent Service to manage deployment
