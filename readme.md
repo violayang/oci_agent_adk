@@ -13,10 +13,7 @@ git clone https://github.com/aojah1/adk_projects.git
 
 ### Optional commands
 How to actually get Python 3.13 on macOS (change it for your machine)
-    1 Homebrew (simplest)
-    bash
-    
-    Option 1 :
+    Option 1 : Homebrew (simplest)
     brew update
     brew install python@3.13          # puts python3.13 in /opt/homebrew/bin
     echo 'export PATH="/opt/homebrew/opt/python@3.13/bin:$PATH"' >> ~/.zshrc
@@ -30,10 +27,9 @@ How to actually get Python 3.13 on macOS (change it for your machine)
     python --version                  # now 3.13.0
 
 ### Configuring and running the agent
-bash
->> python3.13 -m venv .venv
-> 
->> source .venv/bin/activate
+
+    python3.13 -m venv .venv
+    source .venv/bin/activate
 
 ### Installing all the required packages
 #### After you create a project and a virtual environment, install the latest version of required packages:
