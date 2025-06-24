@@ -30,6 +30,7 @@ How to actually get Python 3.13 on macOS (change it for your machine)
     python --version                  # now 3.13.0
 
 ### Configuring and running the agent
+bash
 >> python3.13 -m venv .venv
 > 
 >> source .venv/bin/activate
@@ -43,7 +44,7 @@ How to actually get Python 3.13 on macOS (change it for your machine)
 #### The ADK provides an AgentClient class to simplify handling authentication and management of agent resources. Four authentication types are supported:
 
 ### API Key Authentication (Default)
-#### API key authentication is the default and most common method for authenticating with OCI services.
+#### API key authentication is the default and most common method for authenticating with OCI services, and this is what we will be using in this project.
 
 from oci.addons.adk import AgentClient
 
@@ -53,7 +54,7 @@ client = AgentClient(
     region="<your-region>"  # OCI region such as "us-chicago-1" or airport code such as "ORD"
 )
 
-### Configuring your .env (cnfig) file
+### Configuring your .env (config) file
 Rename the adk_projects/config/sample_.env to adk_projects/config/.env 
 
 Change the config variables based on your agents requirements
@@ -163,5 +164,7 @@ oci-2.154.1+preview.1.228
 ##### -- Author: Anup Ojah, HPC&AI Leader, Oracle Cloud Engineering
 ##### References:
 https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/adk/api-reference/introduction.htm
+
 https://www.oracle.com/applications/fusion-ai/ai-agents/
+
 https://docs.oracle.com/en/solutions/ai-fraud-detection/index.html
