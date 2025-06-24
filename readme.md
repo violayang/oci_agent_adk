@@ -13,6 +13,7 @@ git clone https://github.com/aojah1/adk_projects.git
 
 ### Optional commands
 How to actually get Python 3.13 on macOS (change it for your machine)
+    
     Option 1 : Homebrew (simplest)
     brew update
     brew install python@3.13          # puts python3.13 in /opt/homebrew/bin
