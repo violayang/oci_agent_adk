@@ -33,8 +33,6 @@ How to actually get Python 3.13 on macOS (change it for your machine)
 >> python3.13 -m venv .venv
 > 
 >> source .venv/bin/activate
-> 
->> python3.13 -m pip install -r requirements.txt
 
 ### Installing all the required packages
 #### After you create a project and a virtual environment, install the latest version of required packages:
@@ -54,6 +52,11 @@ client = AgentClient(
     profile="DEFAULT",
     region="<your-region>"  # OCI region such as "us-chicago-1" or airport code such as "ORD"
 )
+
+### Configuring your .env (cnfig) file
+Rename the adk_projects/config/sample_.env to adk_projects/config/.env 
+
+Change the config variables based on your agents requirements
 
 ### Configuring and running an agent - Quick Test
 
