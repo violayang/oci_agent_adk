@@ -34,7 +34,7 @@ How to actually get Python 3.13 on macOS (change it for your machine)
 ### Installing all the required packages
 #### After you create a project and a virtual environment, install the latest version of required packages:
 
->> python3.13 -m pip install -r requirements.txt
+    python3.13 -m pip install -r requirements.txt
 
 ### Authenticating your ADK app to OCI
 #### The ADK provides an AgentClient class to simplify handling authentication and management of agent resources. Four authentication types are supported:
@@ -57,7 +57,7 @@ Change the config variables based on your agents requirements
 
 ### Configuring and running an agent - Quick Test
 
->> python3.13 -m src.examples.test_setup  
+    python3.13 -m src.examples.test_setup  
 
 ### Best practices to follow while building an agent. 
 #### Below, you will see how to build an agent called 'taxagent' that has 2 tools - RAG Tool and a CustomFunction
@@ -65,27 +65,29 @@ Change the config variables based on your agents requirements
 
 #### Step 1: Build the tools required.
 
->> CustomFunction --> src/tools/custom_function_tools.py
+>> CustomFunction --> 
+    src/tools/custom_function_tools.py
 > 
->> RAG Tool --> oci.addons.adk.tool.prebuilt import AgenticRagTool
+>> RAG Tool --> 
+    oci.addons.adk.tool.prebuilt import AgenticRagTool
 
 #### Step 2: Build/Deploy the Agent - taxagent to GenAI Agent Service to manage deployment
 
->> python3.13 -m src.agents.taxagent
+    python3.13 -m src.agents.taxagent
 
 #### Step 3: Run/Test the API that will invoke the Agents deployed through GenAI Agent Service (remote)
 
->>  python3.13 -m src.app.tax_assistant.api_taxagent 
+    python3.13 -m src.app.tax_assistant.api_taxagent 
 
 #### Step 4: Run a streamilt app to execute the agent
 
->> python3.13 -m streamlit run src/app/tax_assistant/ui_taxagent.py
+    python3.13 -m streamlit run src/app/tax_assistant/ui_taxagent.py
 
 sample prompt : get tax m&e adjustment for entity 1000
 
 #### Extra : If you want to learn how to expose an agent using FastAPI
 
-python3.13 -m uvicorn src.app.orderxhub.fastapi_orderx:app --reload
+    python3.13 -m uvicorn src.app.orderxhub.fastapi_orderx:app --reload
 
 ### Available OOB Tools from this repo
 
