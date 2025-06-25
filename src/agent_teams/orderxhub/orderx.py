@@ -31,38 +31,6 @@ def agent_flow():
         profile="DEFAULT",
         region=AGENT_REGION
     )
-
-    # instructions = """
-    # You are order taking assistant.
-    # You have tools to take an order as a pdf and store it into a tmp folder.
-    # """
-    #
-    # agent_pdf = Agent(
-    #     client=client,
-    #     agent_endpoint_id=AGENT_EP_ID,
-    #     instructions=instructions,
-    #     tools=[
-    #         convert_pdf_to_png
-    #     ]
-    # )
-    #
-    # agent_pdf.setup()
-
-    # instructions = """
-    #     You are order taking assistant.
-    #     You have tools to take an order as an image and process it by converting the image to text.
-    #     """
-    #
-    # agent_image = Agent(
-    #     client=client,
-    #     agent_endpoint_id=AGENT_EP_ID,
-    #     instructions=instructions,
-    #     tools=[
-    #         image_to_text
-    #     ]
-    # )
-
-
     instructions = """
             You are order taking assistant.
             You have tools to create order by invoking an External REST API. You also have the ability to list orders by invoking an External REST AP.
@@ -83,20 +51,8 @@ def agent_flow():
     return agent
 
 def test_cases():
-    # from pathlib import Path
-    #
-    # THIS_DIR = Path(__file__).resolve()
-    # PROJECT_ROOT = THIS_DIR.parent.parent.parent.parent
-    #
-    # image_path = f"{PROJECT_ROOT}/images/orderhub_handwritten.jpg"
-    # question = "/n What is the ship to address"
-    #
-    # input_prompt = image_path + "   " + question
-    agent_create_order = agent_flow()
 
-    # Handle the first user turn of the conversation
-    #client_provided_context = image_path
-    #input = client_provided_context + " " + question
+    agent_create_order = agent_flow()
     payload = {
         "SourceTransactionNumber": "ORDERX_Standard_Item_02",
         "SourceTransactionSystem": "GPR",

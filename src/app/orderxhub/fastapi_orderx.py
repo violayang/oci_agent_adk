@@ -2,7 +2,7 @@ from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 from pathlib import Path
 import shutil
-from src.agents.orderx import agent_flow
+from src.agents.agent_image2text import agent_flow
 import traceback
 
 app = FastAPI()
