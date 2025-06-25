@@ -48,8 +48,6 @@ def initialize_oci_genai_agent_service():
     return generative_ai_agent_runtime_client, sess_id  # Return both client and session ID
 
 
-# Response Generator
-#@tool
 def rag_agent_service(inp: str):
     """RAG AGENT"""
     #inp = state["messages"][-1].content

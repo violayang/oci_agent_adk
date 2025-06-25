@@ -19,9 +19,9 @@ API_PASS = os.getenv("FUSION_SCM_API_PASS")
 API_URL = os.getenv("FUSION_SCM_API_URL")
 
 @tool
-def create_order(payload: dict) -> str:
+def create_sales_order(payload: dict) -> str:
     """
-    You are a tools to create order by invoking an External REST API.
+    You are a tools to create sales order by invoking an External REST API.
     :param query:
     :return:
     """
@@ -51,66 +51,110 @@ def create_order(payload: dict) -> str:
     except requests.exceptions.RequestException as e:
         return f"API call failed: {str(e)}"
 
-def test_case():
+@tool
+def get_sales_order(orderid: str) -> str:
+    """
+    You are a tools to get sales order by invoking an External REST API.
+    :param query:
+    :return:
+    """
+    try:
+
+        """
+        curl -u username:password "https://servername/fscmRestApi/resources/version/salesOrdersForOrderHub"
+        """
+        response = requests.get(
+            API_URL + "?" + orderid,
+            auth=(API_USER, API_PASS),
+        )
+
+        print("Status Code:", response.status_code)
+        print("Response Text:", response.text)
+
+        response.raise_for_status()
+        return f"Response: {json.dumps(response.json(), indent=4)}"
+
+    except requests.exceptions.RequestException as e:
+        return f"API call failed: {str(e)}"
+
+def test_case_create_sales_order():
     payload = {
-        "SourceTransactionNumber": "ORDERX_Standard_Item_02",
+        "SourceTransactionNumber": "R13_Sample_Order_ATOModel_01",
         "SourceTransactionSystem": "GPR",
-        "SourceTransactionId": "ORDERX_Standard_Item_02",
-        "BusinessUnitName": "Vision Operations",
-        "BuyingPartyName": "Computer Service and Rentals",
-        #"BuyingPartyContactName": "Brian Smith",
-        "TransactionType": "Standard Orders",
-        "RequestedShipDate": "2019-10-19T20:49:12+00:00",
-        "RequestedFulfillmentOrganizationName": "Vision Operations",
-        "PaymentTerms": "30 Net",
-        "TransactionalCurrencyName": "US Dollar",
-        "RequestingBusinessUnitName": "Vision Operations",
-        "FreezePriceFlag": False,
-        "FreezeShippingChargeFlag": False,
-        "FreezeTaxFlag": False,
-        "SubmittedFlag": True,
-        "SourceTransactionRevisionNumber": 1,
+        "SourceTransactionId": "R13_Sample_Order_ATOModel_01",
+        "TransactionalCurrencyCode": "USD",
+        "BusinessUnitId": 204,
+        "BuyingPartyNumber": "1006",
+        "TransactionTypeCode": "STD",
+        "RequestedShipDate": "2018-09-19T19:51:48+00:00",
+        "SubmittedFlag": 'true',
+        "FreezePriceFlag": 'false',
+        "FreezeShippingChargeFlag": 'false',
+        "FreezeTaxFlag": 'false',
+        "RequestingBusinessUnitId": 204,
         "billToCustomer": [{
-            "PartyName": "Computer Service and Rentals",
-            "AccountNumber": "1006",
-            "Address1": "301 Summit Hill Drive",
-            "City": "CHATTANOOGA",
-            "State": "TN",
-            "PostalCode": "37401",
-            "County": "Hamilton",
-            "Province": None,
-            "Country": "US"
+            "CustomerAccountId": 1006,
+            "SiteUseId": 1025
         }],
         "shipToCustomer": [{
-            "PartyName": "Vision Corporation",
-            "PartyId": 1002,
-            "PartyNumber": "1002",
-            "ContactId": 5801,
-            "ContactNumber": "8623",
-            "ContactName": "Henry Smith",
-            "ContactFirstName": "Henry",
-            "ContactLastName": "Smith",
-            "SiteId": 21765,
-            "Address1": "4598 Cherry Lane",
-            "City": "BUFFALO",
-            "County": "ERIE",
-            "PostalCode": "14201",
-            "Country": "US"
+            "PartyId": 1006,
+            "SiteId": 1036
         }],
         "lines": [{
-            "SourceTransactionLineId": "10",
-            "SourceTransactionLineNumber": "10",
-            "SourceTransactionScheduleId": "10",
-            "SourceScheduleNumber": "10",
-            "TransactionCategoryCode": "ORDER",
-            "TransactionLineType": "Buy",
-            "ProductNumber": "AS92888",
-            "OrderedQuantity": 5,
-            "OrderedUOM": "Each"
-        }]
+            "SourceTransactionLineId": "1",
+            "SourceTransactionLineNumber": "1",
+            "SourceScheduleNumber": "1",
+            "SourceTransactionScheduleId": "1",
+            "OrderedUOMCode": "Ea",
+            "OrderedQuantity": 1,
+            "ProductNumber": "STOVE_ATO_MODEL",
+            "FOBPoint": "Destination",
+            "FreightTerms": "Add freight",
+            "PaymentTerms": "30 Net",
+            "ShipmentPriority": "High",
+            "RequestedFulfillmentOrganizationId": 204
+        },
+        {
+            "SourceTransactionLineId": "2",
+            "SourceTransactionLineNumber": "2",
+            "SourceScheduleNumber": "1",
+            "SourceTransactionScheduleId": "1",
+            "OrderedUOMCode": "Ea",
+            "OrderedQuantity": 1,
+            "ProductNumber": "GAS_FUEL",
+            "FOBPoint": "Destination",
+            "FreightTerms": "Add freight",
+            "PaymentTerms": "30 Net",
+            "ShipmentPriority": "High",
+            "RequestedFulfillmentOrganizationId": 204,
+            "ParentSourceTransactionLineId": "1"
+        },
+        {
+            "SourceTransactionLineId": "3",
+            "SourceTransactionLineNumber": "3",
+            "SourceScheduleNumber": "1",
+            "SourceTransactionScheduleId": "1",
+            "OrderedUOMCode": "Ea",
+            "OrderedQuantity": 1,
+            "ProductNumber": "Burner_4_GRID",
+            "PurchasingUOMCode": "Ea",
+            "FOBPoint": "Destination",
+            "FreightTerms": "Add freight",
+            "PaymentTerms": "30 Net",
+            "ShipmentPriority": "High",
+            "FOBPointCode":"Destination",
+            "RequestedFulfillmentOrganizationId": 204,
+            "ParentSourceTransactionLineId": "1"
+        }
+        ]
     }
 
-    create_order(payload)
+
+    create_sales_order(payload)
+
+def test_get_sales_order():
+    order_string = "finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=404087,SourceTransactionSystem=GPR"
+    get_sales_order(order_string)
 
 if __name__ == "__main__":
-    test_case()
+    test_get_sales_order()

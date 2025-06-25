@@ -67,7 +67,7 @@ def test_cases():
     PROJECT_ROOT = THIS_DIR.parent.parent.parent.parent
 
     image_path = f"{PROJECT_ROOT}/images/orderhub_handwritten.jpg"
-    question = "/n What is the ship to address"
+    question = "/n What is the ship to address. Provide me the output in a json format."
 
     input_prompt = image_path + "   " + question
     agent = agent_flow()

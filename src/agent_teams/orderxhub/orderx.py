@@ -5,7 +5,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 #from src.tools.custom_functions.pdf_to_image import convert_pdf_to_png_t
 from src.tools.vision_instruct_tools import image_to_text
-from src.tools.external_REST_tools import create_order
+from src.tools.external_REST_tools import create_sales_order, get_sales_order
 
 # ────────────────────────────────────────────────────────
 # 1) bootstrap paths + env + llm
@@ -73,7 +73,7 @@ def agent_flow():
         agent_endpoint_id=AGENT_EP_ID,
         instructions=instructions,
         tools=[
-            create_order
+            create_sales_order, get_sales_order
         ]
     )
 
@@ -160,9 +160,10 @@ def test_cases():
     final_message = response.data["message"]["content"]["text"]
     print(final_message)
 
-    # response = agent_create_order.run(input_prompt)
-    # final_message = response.data["message"]["content"]["text"]
-    # print(final_message)
+    input_prompt = "get sales order with query string for api call as : finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=404087,SourceTransactionSystem=GPR"
+    response = agent_create_order.run(input_prompt)
+    final_message = response.data["message"]["content"]["text"]
+    print(final_message)
 
 if __name__ == '__main__':
     test_cases()
