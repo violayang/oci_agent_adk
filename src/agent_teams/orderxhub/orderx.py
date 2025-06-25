@@ -5,8 +5,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 #from src.tools.custom_functions.pdf_to_image import convert_pdf_to_png_t
 from src.tools.vision_instruct_tools import image_to_text
-from src.tools.external_REST_tools import create_sales_order, get_sales_order
-
+from src.toolkit.fusion_scm_order_toolkit import Fusion_SCM_Order_Toolkit
 # ────────────────────────────────────────────────────────
 # 1) bootstrap paths + env + llm
 # ────────────────────────────────────────────────────────
@@ -66,22 +65,22 @@ def agent_flow():
 
     instructions = """
             You are order taking assistant.
-            You have tools to create order by invoking an External REST API.
+            You have tools to create order by invoking an External REST API. You also have the ability to list orders by invoking an External REST AP.
             """
-    agent_create_order = Agent(
+    agent_order = Agent(
         client=client,
         agent_endpoint_id=AGENT_EP_ID,
         instructions=instructions,
         tools=[
-            create_sales_order, get_sales_order
+            Fusion_SCM_Order_Toolkit(),
         ]
     )
 
     #agent_image.setup()
-    agent_create_order.setup()
+    agent = agent_order.setup()
 
 
-    return agent_create_order
+    return agent
 
 def test_cases():
     # from pathlib import Path

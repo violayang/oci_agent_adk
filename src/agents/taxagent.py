@@ -49,14 +49,13 @@ def agent_flow():
         ]
     )
 
-    agent.setup()
-
     return agent
 
 
 def test_cases():
 
     agent = agent_flow()
+    agent.setup()
 
     # This is a context your existing code is best at producing (e.g., fetching the authenticated user id)
     client_provided_context = "[Context: The logged in user ID is: user_123] "
@@ -85,4 +84,4 @@ def test_cases():
 
 
 if __name__ == "__main__":
-    test_cases()
+    agent_flow()

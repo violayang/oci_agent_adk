@@ -25,7 +25,7 @@ CONFIG_PROFILE = "DEFAULT"
 def initialize_embedding_model():
 
     return OCIGenAIEmbeddings(
-  model_id="cohere.embed-english-v3.0",
+  model_id=MODEL_ID,
   service_endpoint=ENDPOINT,
   truncate="NONE",
   compartment_id=COMPARTMENT_ID,

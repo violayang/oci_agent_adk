@@ -78,11 +78,7 @@ RAG Tool -->
 
     python3.13 -m src.agents.taxagent
 
-#### Step 3: Run/Test the API that will invoke the Agents deployed through GenAI Agent Service (remote)
-
-    python3.13 -m src.app.tax_assistant.api_taxagent 
-
-#### Step 4: Run a streamilt app to execute the agent
+#### Step 3: Run a streamilt app to execute the agent
 
     python3.13 -m streamlit run src/app/tax_assistant/ui_taxagent.py
 
