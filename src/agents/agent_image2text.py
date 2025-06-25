@@ -46,7 +46,7 @@ def agent_flow():
     )
     return agent
 
-def test_cases():
+def agent_setup():
     from pathlib import Path
 
     THIS_DIR = Path(__file__).resolve()
@@ -69,4 +69,4 @@ def test_cases():
     print(final_message)
 
 if __name__ == '__main__':
-    test_cases()
+    agent_setup()

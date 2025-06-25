@@ -165,3 +165,5 @@ https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/adk/api-referenc
 https://www.oracle.com/applications/fusion-ai/ai-agents/
 
 https://docs.oracle.com/en/solutions/ai-fraud-detection/index.html
+
+https://agents.oraclecorp.com/adk/best-practices/separate-setup-run

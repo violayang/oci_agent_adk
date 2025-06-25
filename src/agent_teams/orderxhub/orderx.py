@@ -3,9 +3,9 @@ from typing import Dict
 from oci.addons.adk import Agent, AgentClient, tool
 from pathlib import Path
 from dotenv import load_dotenv
-#from src.tools.custom_functions.pdf_to_image import convert_pdf_to_png_t
-from src.tools.vision_instruct_tools import image_to_text
+from src.agents.agent_image2text import agent_flow
 from src.toolkit.fusion_scm_order_toolkit import Fusion_SCM_Order_Toolkit
+from src.tools.vision_instruct_tools import image_to_text
 # ────────────────────────────────────────────────────────
 # 1) bootstrap paths + env + llm
 # ────────────────────────────────────────────────────────
@@ -24,16 +24,18 @@ AGENT_REGION = os.getenv("AGENT_REGION")
 # 2) Logic
 # ────────────────────────────────────────────────────────
 
-def agent_flow():
+def agent_flow_order():
 
     client = AgentClient(
         auth_type="api_key",
         profile="DEFAULT",
         region=AGENT_REGION
     )
+
     instructions = """
-            You are order taking assistant.
-            You have tools to create order by invoking an External REST API. You also have the ability to list orders by invoking an External REST AP.
+            You are order taking assistant. Don't make any decision of your own and simply follow the prompr to execute the right tool.
+            Use the tool 'create_sales_order' to create sales order by invoking an External REST API.
+            Use the tool 'get_sales_order' to get sales order by invoking an External REST API.
             """
     agent_order = Agent(
         client=client,
@@ -44,81 +46,93 @@ def agent_flow():
         ]
     )
 
-    #agent_image.setup()
-    agent = agent_order.setup()
+    return agent_order
 
+def agent_setup():
 
-    return agent
+    agent_order = agent_flow_order()
+    agent_order.setup()
 
-def test_cases():
-
-    agent_create_order = agent_flow()
     payload = {
-        "SourceTransactionNumber": "ORDERX_Standard_Item_02",
+        "SourceTransactionNumber": "R13_Sample_Order_ATOModel_02",
         "SourceTransactionSystem": "GPR",
-        "SourceTransactionId": "ORDERX_Standard_Item_02",
-        "BusinessUnitName": "Vision Operations",
-        "BuyingPartyName": "Computer Service and Rentals",
-        "TransactionType": "Standard Orders",
-        "RequestedShipDate": "2019-10-19T20:49:12+00:00",
-        "RequestedFulfillmentOrganizationName": "Vision Operations",
-        "PaymentTerms": "30 Net",
-        "TransactionalCurrencyName": "US Dollar",
-        "RequestingBusinessUnitName": "Vision Operations",
-        "FreezePriceFlag": False,
-        "FreezeShippingChargeFlag": False,
-        "FreezeTaxFlag": False,
-        "SubmittedFlag": True,
-        "SourceTransactionRevisionNumber": 1,
+        "SourceTransactionId": "R13_Sample_Order_ATOModel_02",
+        "TransactionalCurrencyCode": "USD",
+        "BusinessUnitId": 204,
+        "BuyingPartyNumber": "1006",
+        "TransactionTypeCode": "STD",
+        "RequestedShipDate": "2018-09-19T19:51:48+00:00",
+        "SubmittedFlag": 'true',
+        "FreezePriceFlag": 'false',
+        "FreezeShippingChargeFlag": 'false',
+        "FreezeTaxFlag": 'false',
+        "RequestingBusinessUnitId": 204,
         "billToCustomer": [{
-            "PartyName": "Computer Service and Rentals",
-            "AccountNumber": "1006",
-            "Address1": "301 Summit Hill Drive",
-            "City": "CHATTANOOGA",
-            "State": "TN",
-            "PostalCode": "37401",
-            "County": "Hamilton",
-            "Province": None,
-            "Country": "US"
+            "CustomerAccountId": 1006,
+            "SiteUseId": 1025
         }],
         "shipToCustomer": [{
-            "PartyName": "Vision Corporation",
-            "PartyId": 1002,
-            "PartyNumber": "1002",
-            "ContactId": 5801,
-            "ContactNumber": "8623",
-            "ContactName": "Henry Smith",
-            "ContactFirstName": "Henry",
-            "ContactLastName": "Smith",
-            "SiteId": 21765,
-            "Address1": "4598 Cherry Lane",
-            "City": "BUFFALO",
-            "County": "ERIE",
-            "PostalCode": "14201",
-            "Country": "US"
+            "PartyId": 1006,
+            "SiteId": 1036
         }],
         "lines": [{
-            "SourceTransactionLineId": "10",
-            "SourceTransactionLineNumber": "10",
-            "SourceTransactionScheduleId": "10",
-            "SourceScheduleNumber": "10",
-            "TransactionCategoryCode": "ORDER",
-            "TransactionLineType": "Buy",
-            "ProductNumber": "AS92888",
-            "OrderedQuantity": 5,
-            "OrderedUOM": "Each"
-        }]
+            "SourceTransactionLineId": "1",
+            "SourceTransactionLineNumber": "1",
+            "SourceScheduleNumber": "1",
+            "SourceTransactionScheduleId": "1",
+            "OrderedUOMCode": "Ea",
+            "OrderedQuantity": 1,
+            "ProductNumber": "STOVE_ATO_MODEL",
+            "FOBPoint": "Destination",
+            "FreightTerms": "Add freight",
+            "PaymentTerms": "30 Net",
+            "ShipmentPriority": "High",
+            "RequestedFulfillmentOrganizationId": 204
+        },
+            {
+                "SourceTransactionLineId": "2",
+                "SourceTransactionLineNumber": "2",
+                "SourceScheduleNumber": "1",
+                "SourceTransactionScheduleId": "1",
+                "OrderedUOMCode": "Ea",
+                "OrderedQuantity": 1,
+                "ProductNumber": "GAS_FUEL",
+                "FOBPoint": "Destination",
+                "FreightTerms": "Add freight",
+                "PaymentTerms": "30 Net",
+                "ShipmentPriority": "High",
+                "RequestedFulfillmentOrganizationId": 204,
+                "ParentSourceTransactionLineId": "1"
+            },
+            {
+                "SourceTransactionLineId": "3",
+                "SourceTransactionLineNumber": "3",
+                "SourceScheduleNumber": "1",
+                "SourceTransactionScheduleId": "1",
+                "OrderedUOMCode": "Ea",
+                "OrderedQuantity": 1,
+                "ProductNumber": "Burner_4_GRID",
+                "PurchasingUOMCode": "Ea",
+                "FOBPoint": "Destination",
+                "FreightTerms": "Add freight",
+                "PaymentTerms": "30 Net",
+                "ShipmentPriority": "High",
+                "FOBPointCode": "Destination",
+                "RequestedFulfillmentOrganizationId": 204,
+                "ParentSourceTransactionLineId": "1"
+            }
+        ]
     }
 
     input_prompt = f"Create a sales order in Oracle SCM using a properly structured JSON payload.: /n   {payload}"
-    response = agent_create_order.run(input_prompt)
+    response = agent_order.run(input_prompt)
     final_message = response.data["message"]["content"]["text"]
     print(final_message)
 
-    input_prompt = "get sales order with query string for api call as : finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=404087,SourceTransactionSystem=GPR"
-    response = agent_create_order.run(input_prompt)
+    input_prompt = "get sales order with query string for api call as : finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=R13_Sample_Order_ATOModel_02,SourceTransactionSystem=GPR"
+    response = agent_order.run(input_prompt)
     final_message = response.data["message"]["content"]["text"]
     print(final_message)
 
 if __name__ == '__main__':
-    test_cases()
+    agent_setup()
