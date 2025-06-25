@@ -1,6 +1,7 @@
 oci
-oci[adk]
+oci[adk]@https://artifactory.oci.oraclecorp.com:443/opc-public-sdk-dev-pypi-local/oci-2.154.1+preview.1.228-py3-none-any.whl
 langchain_core>=0.3.29
 langchain-community==0.3.14
 streamlit
 FastAPI
+pdf2image
