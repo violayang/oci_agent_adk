@@ -157,6 +157,25 @@ https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data
 ### MCP Client - 
 oci-2.154.1+preview.1.228
 
+### Deploying your ADK as a package into a Docker Container (e.g OKE)
+
+> 1. Create Your Python Package
+> 2. Build the Package
+     cd my_package
+     python3.13 -m pip install build
+     python3.13 -m build
+> This creates a dist/ folder with .whl and .tar.gz.
+> 3. Create Minimal Dockerfile
+> 4. Build and Run the Container
+     docker build -t my_package_image . 
+     docker run -it my_package_image python3 -c
+> Ignore Non-Essentials (Optional)
+> To keep the image clean, add a .dockerignore file:
+> 5. Publish it to OCI Registry
+> 6. Pull & Run Anywhere:
+     docker pull iad.ocir.io/mytenancy/my_package:0.1
+     docker run --rm iad.ocir.io/mytenancy/my_package:0.1
+> 7. Deploy into OKE
 
 ##### -- Author: Anup Ojah, HPC&AI Leader, Oracle Cloud Engineering
 ##### References:
