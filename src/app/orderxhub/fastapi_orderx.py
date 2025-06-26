@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Dict
 import shutil
 from src.agents.agent_image2text import agent_flow
+from src.agent_teams.orderxhub.orderx import agent_flow_order
 import traceback, json, os
 
 app = FastAPI()
@@ -55,7 +56,7 @@ async def create_sales_order(payload: Dict = Body(...)):
         # Construct a human-readable prompt with embedded JSON
         input_prompt = f"Create a sales order using a properly structured JSON payload:\n{payload_json}"
 
-        agent_order = agent_flow()
+        agent_order = agent_flow_order()
         response = await agent_order.run_async(input_prompt)
 
         final_answer = response.data["message"]["content"]["text"]
@@ -75,15 +76,14 @@ async def create_sales_order(payload: Dict = Body(...)):
         )
 
 @app.get("/orders/query")
-async def query_sales_order(query_string: str):
+async def query_sales_order(input_prompt: str):
     """
     Get sales order using a query string for the Oracle SCM API.
     Example:
-    /orders/query?query_string=finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=404087,SourceTransactionSystem=GPR
+    /orders/query?finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=404087,SourceTransactionSystem=GPR
     """
     try:
-        input_prompt = f"Get sales order with query string for API call as: {query_string}"
-        agent = agent_flow()
+        agent = agent_flow_order()
         response = await agent.run_async(input_prompt)
 
         final_answer = response.data["message"]["content"]["text"]

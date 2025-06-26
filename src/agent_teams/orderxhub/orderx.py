@@ -46,12 +46,13 @@ def agent_flow_order():
         ]
     )
 
+    agent_order.setup()
     return agent_order
 
 def agent_setup():
 
     agent_order = agent_flow_order()
-    agent_order.setup()
+
 
     payload = {
         "SourceTransactionNumber": "R13_Sample_Order_ATOModel_02",
@@ -129,7 +130,7 @@ def agent_setup():
     final_message = response.data["message"]["content"]["text"]
     print(final_message)
 
-    input_prompt = "get sales order with query string for api call as : finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=R13_Sample_Order_ATOModel_02,SourceTransactionSystem=GPR"
+    input_prompt = "get sales order with query string for api call as : finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=R13_Sample_Order_ATOModel_03,SourceTransactionSystem=GPR"
     response = agent_order.run(input_prompt)
     final_message = response.data["message"]["content"]["text"]
     print(final_message)

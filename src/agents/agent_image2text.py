@@ -44,6 +44,7 @@ def agent_flow():
             image_to_text
         ]
     )
+    agent.setup()
     return agent
 
 def agent_setup():
@@ -57,7 +58,7 @@ def agent_setup():
 
     input_prompt = image_path + "   " + question
     agent = agent_flow()
-    agent.setup()
+
 
     # Handle the first user turn of the conversation
     #client_provided_context = image_path
