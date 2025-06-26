@@ -9,30 +9,38 @@ st.title("🧾 Tax Assistant with OCI GenAI")
 st.markdown("Ask tax-related questions using Oracle RAG Agent Service.")
 
 user_input = st.text_area("Enter your query:", height=150)
+
 agent = agent_flow()
 
-async def run_agent(agent, query):
-    return await agent.run(query)
+# Utility to safely run async code in Streamlit
+def run_async(coro):
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop = asyncio.get_event_loop()
+
+    return loop.run_until_complete(coro)
 
 if st.button("Ask"):
     if user_input.strip():
         try:
             with st.spinner("Contacting Oracle Tax Agent..."):
-                # Run the coroutine safely in a thread
-                loop = asyncio.get_running_loop()
-                task = loop.create_task(run_agent(agent, user_input))
-                response = asyncio.run_coroutine_threadsafe(task, loop).result()
+                response = run_async(agent.run_async(user_input))
 
                 st.success("Response received:")
-                final_answer = extract_final_answer_from_chat_result(response)
+                final_answer = response.data["message"]["content"]["text"]
+
                 if final_answer:
                     st.write("**Final Answer:**", final_answer)
 
                     try:
-                        citation_url = response.data.message.content.citations[0].source_location.url
+                        citation_url = response.data["message"]["content"]["citations"][0]["source_location"]["url"]
                         st.markdown(f"[Source URL]({citation_url})")
                     except Exception:
                         pass
+
         except Exception as e:
             st.error(f"❌ Error: {e}")
     else:

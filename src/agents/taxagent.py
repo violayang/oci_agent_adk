@@ -52,7 +52,7 @@ def agent_flow():
     return agent
 
 
-def test_cases():
+def setup_agent():
 
     agent = agent_flow()
     agent.setup()
@@ -84,4 +84,4 @@ def test_cases():
 
 
 if __name__ == "__main__":
-    agent_flow()
+    setup_agent()
