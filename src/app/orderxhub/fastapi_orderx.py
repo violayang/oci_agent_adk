@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from pathlib import Path
 from typing import Dict
 import shutil
-from src.agents.agent_image2text import agent_flow
+#from src.agents.agent_image2text import agent_flow
 from src.agent_teams.orderxhub.orderx import agent_flow_order
 import traceback, json, os
 
@@ -23,7 +23,7 @@ async def ask_agent_from_image(
 
         # Build the prompt
         input_prompt = f"{str(temp_path)}   \n{question}"
-        agent_image2text = agent_flow()
+        agent_image2text = agent_flow_order()
         response = await agent_image2text.run_async(input_prompt)
 
         final_answer = response.data["message"]["content"]["text"]
@@ -83,8 +83,8 @@ async def query_sales_order(input_prompt: str):
     /orders/query?finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=404087,SourceTransactionSystem=GPR
     """
     try:
-        agent = agent_flow_order()
-        response = await agent.run_async(input_prompt)
+        agent_get = agent_flow_order()
+        response = await agent_get.run_async(input_prompt)
 
         final_answer = response.data["message"]["content"]["text"]
         print(final_answer)

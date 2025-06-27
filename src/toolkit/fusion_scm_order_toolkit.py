@@ -65,8 +65,12 @@ class Fusion_SCM_Order_Toolkit(Toolkit):
             """
             curl -u username:password "https://servername/fscmRestApi/resources/version/salesOrdersForOrderHub"
             """
+
+            #query_string = f"finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber={orderid},SourceTransactionSystem=GPR"
+            resource = f"/{orderid}"
+            print(resource)
             response = requests.get(
-                API_URL + "?" + orderid,
+                API_URL + resource,
                 auth=(API_USER, API_PASS),
             )
 
@@ -155,9 +159,9 @@ def test_case_create_sales_order():
     toolkit.create_sales_order(payload)
 
 def test_get_sales_order():
-    order_string = "finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=404087,SourceTransactionSystem=GPR"
+    order_string = "GPR:R13_Sample_Order_ATOModel_01"
     toolkit = Fusion_SCM_Order_Toolkit()
     toolkit.get_sales_order(order_string)
 
 if __name__ == "__main__":
-    test_case_create_sales_order()
+    test_get_sales_order()

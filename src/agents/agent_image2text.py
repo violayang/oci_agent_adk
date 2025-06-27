@@ -23,7 +23,7 @@ AGENT_REGION = os.getenv("AGENT_REGION")
 # 2) Logic
 # ────────────────────────────────────────────────────────
 
-def agent_flow():
+def agent_flow_image2text():
 
     client = AgentClient(
         auth_type="api_key",
@@ -44,7 +44,7 @@ def agent_flow():
             image_to_text
         ]
     )
-    agent.setup()
+
     return agent
 
 def agent_setup():
@@ -57,8 +57,8 @@ def agent_setup():
     question = "/n What is the ship to address"
 
     input_prompt = image_path + "   " + question
-    agent = agent_flow()
-
+    agent = agent_flow_image2text()
+    agent.setup()
 
     # Handle the first user turn of the conversation
     #client_provided_context = image_path
