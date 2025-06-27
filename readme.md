@@ -4,7 +4,8 @@
 > https://github.com/aojah1/agents/blob/main/Agentic%20Framework_1.2_Feb03_MM_Anup.pdf
 
 ### ADK REFERENCE ARCHITECTURE
-![config/img.png](images/adk_arch.png)
+![adk_arch_how.png](adk_arch_how.png)
+![config/adk_arch.png](images/adk_arch.png)
 
 ### Configure your development environment
 

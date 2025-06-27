@@ -15,7 +15,7 @@ PROJECT_ROOT = THIS_DIR.parent.parent.parent
 load_dotenv(PROJECT_ROOT / "config/.env")  # expects OCI_ vars in .env
 
 # Set up the OCI GenAI Agents endpoint configuration
-AGENT_EP_ID = os.getenv("AGENT_EP_ID")
+AGENT_EP_ID = os.getenv("AGENT_EP_ID_2")
 AGENT_SERVICE_EP = os.getenv("AGENT_SERVICE_EP")
 AGENT_KB_ID = os.getenv("AGENT_KB_ID")
 AGENT_REGION = os.getenv("AGENT_REGION")
@@ -55,9 +55,9 @@ def agent_setup():
 
 
     payload = {
-        "SourceTransactionNumber": "R13_Sample_Order_ATOModel_02",
+        "SourceTransactionNumber": "R13_Sample_Order_ATOModel_07",
         "SourceTransactionSystem": "GPR",
-        "SourceTransactionId": "R13_Sample_Order_ATOModel_02",
+        "SourceTransactionId": "R13_Sample_Order_ATOModel_07",
         "TransactionalCurrencyCode": "USD",
         "BusinessUnitId": 204,
         "BuyingPartyNumber": "1006",
@@ -130,10 +130,10 @@ def agent_setup():
     final_message = response.data["message"]["content"]["text"]
     print(final_message)
 
-    input_prompt = "get sales order with query string for api call as : finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=R13_Sample_Order_ATOModel_03,SourceTransactionSystem=GPR"
-    response = agent_order.run(input_prompt)
-    final_message = response.data["message"]["content"]["text"]
-    print(final_message)
+    # input_prompt = "get sales order with query string for api call as : finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=R13_Sample_Order_ATOModel_07,SourceTransactionSystem=GPR"
+    # response = agent_order.run(input_prompt)
+    # final_message = response.data["message"]["content"]["text"]
+    # print(final_message)
 
 if __name__ == '__main__':
     agent_setup()
