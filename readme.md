@@ -4,7 +4,16 @@
 > https://github.com/aojah1/agents/blob/main/Agentic%20Framework_1.2_Feb03_MM_Anup.pdf
 
 ### ADK REFERENCE ARCHITECTURE
-![images/adk_arch_how.png](images/adk_arch_how.png)
+How it Works
+Typically your ADK code is embedded in a larger app and is deployed in your environment. Your larger app might be a web app, a Slackbot, a service, or a a script.
+
+Through ADK function tools, you can integrate an agent with your local codebase, your remote databases, remote microservices, and so on using the authentication that's native to your environment.
+
+The ADK calls the agent endpoint, exposed by OCI Generative AI Agents service, which runs the agent loop remotely to your environment.
+
+When the agent loop decides to call a hosted tool (like a RAG tool), that calls happens without going back to ADK.
+
+When the agent loop decides to call the local function tools, the control is returned back to the ADK. The ADK calls your local function tools, and submits the function tool output back to Generative AI Agents, which then continues the next iteration of the agent loop.
 ![images/adk_arch.png](images/adk_arch.png)
 
 ### Configure your development environment
