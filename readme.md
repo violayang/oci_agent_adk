@@ -73,7 +73,7 @@ Change the config variables based on your agents requirements
 
 ### Best practices to follow while building an agent. 
 #### Below, you will see how to build an agent called 'taxagent' that has 2 tools - RAG Tool and a CustomFunction
-![config/img.png](images/agents_deploy.png)
+![images/agents_deploy.png](images/agents_deploy.png)
 
 #### Step 1: Build the tools required.
 
