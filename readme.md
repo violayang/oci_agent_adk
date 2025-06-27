@@ -4,7 +4,8 @@
 > https://github.com/aojah1/agents/blob/main/Agentic%20Framework_1.2_Feb03_MM_Anup.pdf
 
 ### ADK REFERENCE ARCHITECTURE
-How it Works
+#### How it Works
+
 Typically your ADK code is embedded in a larger app and is deployed in your environment. Your larger app might be a web app, a Slackbot, a service, or a a script.
 
 Through ADK function tools, you can integrate an agent with your local codebase, your remote databases, remote microservices, and so on using the authentication that's native to your environment.
