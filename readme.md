@@ -17,6 +17,55 @@ When the agent loop decides to call a hosted tool (like a RAG tool), that calls 
 When the agent loop decides to call the local function tools, the control is returned back to the ADK. The ADK calls your local function tools, and submits the function tool output back to Generative AI Agents, which then continues the next iteration of the agent loop.
 ![images/adk_arch.png](images/adk_arch.png)
 
+## Key Concepts of how the ADK Landing Zone is configured
+
+### Applications
+> An application is what gets deployed at the client side, for users or machines to interact with.
+> Apps can be exposed either as an API or a UI.
+
+### Agent Teams
+> A structured sequence of steps or actions that the AI Agent follows to accomplish a specific business task or answer a user query.
+Workflow patterns such as Supervisor and Swarm makes up an Agent Team.
+
+### Agents
+> Agents handles specific task and is equipped with specific skills that enables it to carry out task. Consider this as a worker behind the scenes to perform actual actions or task that the agent is suppose to deliver to the user.
+Agent can connect to other systems, API's or tools, which allows the agent to utilize information from different data sources or business functions.
+
+### Prompt Engineering
+> Topics: 
+>> Topics define the scope, intent and purpose of an Agent. Topics further refine the Agent's scope and purpose - this is added to the system prompt in instructing an LLM 
+Use a consistent pather
+Subject Area >> Intent Recognition >> Conversational Flow >> Tool/System integrations >> Contextual Responses
+
+> System Prompt:
+>> Each agent has a system prompt. The system prompt defines the Agents personas and capabilities. It establishes the tool it can access. It also describe how the Agent should think about achieving any goals or task for which it was designed.
+Use a consistent pattern : 
+CONTEXT >> ROLE >> OBJECTIVE >> FORMAT >> TONE / STYLE >> CONSTRAINTS
+
+### llm
+> One common place to configure all LLMs the agents are going to use.
+
+### METRO
+> MONITORING >> EVALUATION >> TRACING >> REPORTING > OBSERVABILITY
+
+### MCP Server - 
+
+#### The Model Context Protocol (MCP) is an open standard that enables developers to build secure, two‑way connections between their data sources and AI-powered tools, acting like a “USB‑C port” for AI models to access external context 
+
+> MCP Server 1: 
+    >> Deploy Custom functions as tools and make it available through MCP Server
+    >>Follow this instruction on how to deploy your tools (Custom Functions) into Oracle DataScience using MCP architecture
+https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data-science
+
+> MCP Server 2:
+    >> Deploy Select AI based tools and make is available through OCI ADW
+    >> Reference link goes here ....
+
+### MCP Client - 
+>> Support for MCP client is available on ADK through installation of 'oci-2.154.1+preview.1.228'
+>> A sample code for MCP based agent can be found under
+>>  python3.13 -m src.agents.getinsights
+
 ### Configure your development environment
 
 ### Clone the repository
@@ -72,8 +121,8 @@ Change the config variables based on your agents requirements
     python3.13 -m src.examples.test_setup  
 
 ### Best practices to follow while building an agent. 
-#### Below, you will see how to build an agent called 'taxagent' that has 2 tools - RAG Tool and a CustomFunction.
-#### The examples demonstrates also all the steps required to achieve the final outcome - agents to answer tax related questions.
+#### Below, you will see an example of how to build an agent called 'taxagent' that has 2 tools - RAG Tool and a CustomFunction.
+#### The examples demonstrate also all the steps required to achieve the final outcome - agents to answer tax related questions.
 
 ![images/agents_deploy.png](images/agents_deploy.png)
 
@@ -85,11 +134,11 @@ CustomFunction -->
 
     python3.13 -m src.tools.custom_function_tools
 
-RAG Tool --> 
+RAG Tool (Pre-built tool available through OCI GenAI Agent Service --> 
 
     oci.addons.adk.tool.prebuilt import AgenticRagTool
 
-#### Step 2: "Defines the areas of expertise through instructions that set the boundaries and constraints for agent conversations and abilities.
+#### Step 2: Topic - Defines the areas of expertise through instructions that set the boundaries and constraints for agent conversations and abilities.
 > Topic: src/prompt_engineering/topics/tax_auditor.py
 Instructions: You are a specialized assistant designed to audit and explain tax amounts applied to business transactions.....
 
@@ -140,42 +189,7 @@ sample prompt : get tax m&e adjustment for entity 1000
 #### vision_instruct_tools : 
 > Convert Image to Text tool
 
-### Prompt Engineering
-> Topics: 
->> Topics define the scope, intent and purpose of an Agent. Topics further refine the Agent's scope and purpose - this is added to the system prompt in instructing an LLM 
-Use a consistent pather
-Subject Area >> Intent Recognition >> Conversational Flow >> Tool/System integrations >> Contextual Responses
 
-> System Prompt:
->> Each agent has a system prompt. The system prompt defines the Agents personas and capabilities. It establishes the tool it can access. It also describe how the Agent should think about achieving any goals or task for which it was designed.
-Use a consistent pattern : 
-CONTEXT >> ROLE >> OBJECTIVE >> FORMAT >> TONE / STYLE >> CONSTRAINTS
-
-### Agents
-> Agents handles specific task and is equipped with specific skills that enables it to carry out task. Consider this as a worker behind the scenes to perform actual actions or task that the agent is suppose to deliver to the user.
-Agent can connect to other systems, API's or tools, which allows the agent to utilize information from different data sources or business functions.
-
-### Agent Teams
-> A structured sequence of steps or actions that the AI Agent follows to accomplish a specific business task or answer a user query.
-Workflow patterns such as Supervisor and Swarm makes up an Agent Team.
-
-### Applications
-> An application is what gets deployed at the client side, for users or machines to interact with.
-> Apps can be exposed either as an API or a UI.
-
-### llm
-> One common place to configure all LLMs the application is going to leverage.
-
-### METRO
-> MONITORING >> EVALUATION >> TRACING >> REPORTING > OBSERVABILITY
-
-### MCP Server - 
-Follow this instruction on how to deploy your tools into Oracle DataScience using MCP architecture
-
-https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data-science
-
-### MCP Client - 
-oci-2.154.1+preview.1.228
 
 ### Deploying your ADK as a package into a Docker Container (e.g OKE)
 
