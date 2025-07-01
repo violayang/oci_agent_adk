@@ -34,7 +34,7 @@ def agent_flow_order():
     )
 
     instructions = """
-                You are order taking assistant. Don't make any decision of your own and simply follow the prompr to execute the right tool.
+                You are order taking assistant. Don't make any decision of your own and simply follow the prompt to execute the right tool.
                 Use the too 'image_to_text' to convert an image to text. When using this tool, please extract 
                     ***Customer Name***, ***Contact*** ***Address***, ***Item***, ***Quantity and ***Date***
                 Use the tool 'create_sales_order' to create sales order by invoking an External REST API. When using this tool, please add the following to the final answer:
@@ -60,9 +60,9 @@ def agent_setup():
 
 
     payload = {
-        "SourceTransactionNumber": "R13_Sample_Order_ATOModel_11",
+        "SourceTransactionNumber": "R13_Sample_Order_ATOModel_13",
         "SourceTransactionSystem": "GPR",
-        "SourceTransactionId": "R13_Sample_Order_ATOModel_11",
+        "SourceTransactionId": "R13_Sample_Order_ATOModel_13",
         "TransactionalCurrencyCode": "USD",
         "BusinessUnitId": 204,
         "BuyingPartyNumber": "1006",

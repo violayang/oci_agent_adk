@@ -5,6 +5,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from src.tools.custom_function_tools import AccountToolkit
 from oci.addons.adk.tool.prebuilt import AgenticRagTool
+from src.prompt_engineering.topics.tax_auditor import prompt_Agent_Auditor
 
 # ────────────────────────────────────────────────────────
 # 1) bootstrap paths + env + llm
@@ -32,12 +33,7 @@ def agent_flow():
         region=AGENT_REGION
     )
 
-    instructions = """
-    You are customer support agent.
-    Use RAG tool to answer tax related questions.
-    Use function tools to fetch user and org info by id.
-    Only orgs of Enterprise plan can use Responses API.
-    """
+    instructions = prompt_Agent_Auditor # Assign the right topic
 
     agent = Agent(
         client=client,

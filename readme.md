@@ -72,25 +72,33 @@ Change the config variables based on your agents requirements
     python3.13 -m src.examples.test_setup  
 
 ### Best practices to follow while building an agent. 
-#### Below, you will see how to build an agent called 'taxagent' that has 2 tools - RAG Tool and a CustomFunction
+#### Below, you will see how to build an agent called 'taxagent' that has 2 tools - RAG Tool and a CustomFunction.
+#### The examples demonstrates also all the steps required to achieve the final outcome - agents to answer tax related questions.
 
 ![images/agents_deploy.png](images/agents_deploy.png)
 
 #### Step 1: Build the tools required.
+> Based on the business requirements, create tools that would be necessary to execute that business functions.
+> Once tools are created, they are visible within the Tools Project and available for use by agents.
 
 CustomFunction --> 
 
-    src/tools/custom_function_tools.py
+    python3.13 -m src.tools.custom_function_tools
 
 RAG Tool --> 
 
     oci.addons.adk.tool.prebuilt import AgenticRagTool
 
-#### Step 2: Build/Deploy the Agent - taxagent to GenAI Agent Service to manage deployment
+#### Step 2: "Defines the areas of expertise through instructions that set the boundaries and constraints for agent conversations and abilities.
+> Topic: src/prompt_engineering/topics/tax_auditor.py
+Instructions: You are a specialized assistant designed to audit and explain tax amounts applied to business transactions.....
 
+#### Step 3: Build/Deploy the Agent - taxagent to GenAI Agent Service to manage deployment
+> Now that the foundational components—tools, topics, and instructions—of our agents have been defined, you can create your own agents from scratch.
+    
     python3.13 -m src.agents.taxagent
 
-#### Step 3: Run a streamilt app to execute the agent
+#### Step 4: Run a streamilt app to execute the agent
 
     python3.13 -m streamlit run src/app/tax_assistant/ui_taxagent.py
 
