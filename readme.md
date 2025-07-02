@@ -156,7 +156,7 @@ Follow this instruction on how to deploy your tools into Oracle DataScience usin
 https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data-science
 
 ### MCP Client - 
-oci-2.154.1+preview.1.228
+oci-2.154.1  <oci sdk version need update>
 
 
 ##### -- Author: Anup Ojah, HPC&AI Leader, Oracle Cloud Engineering
