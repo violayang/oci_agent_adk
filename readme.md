@@ -66,7 +66,16 @@ https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data
 >> A sample code for MCP based agent can be found under
 >>  python3.13 -m src.agents.getinsights
 
-### Configure your development environment
+### Getting started with OCI Agents in 2 step :
+#### Step 1: Infra Provisioning
+
+> Provisioning an agent endpoint using the OCI Console. 
+
+> You create an agent instance in the cloud, and provision an agent endpoint under that agent instance. 
+
+> No need to configure routing instructions and tools in UI. ADK automates that for you.
+
+#### Step 2: Configure your development environment
 
 ### Clone the repository
 git clone https://github.com/aojah1/adk_projects.git
@@ -98,18 +107,8 @@ How to actually get Python 3.13 on macOS (change it for your machine)
     python3.13 -m pip install -r requirements.txt
 
 ### Authenticating your ADK app to OCI
-#### The ADK provides an AgentClient class to simplify handling authentication and management of agent resources. Four authentication types are supported:
 
-### API Key Authentication (Default)
-#### API key authentication is the default and most common method for authenticating with OCI services, and this is what we will be using in this project.
-
-from oci.addons.adk import AgentClient
-
-client = AgentClient(
-    auth_type="api_key",
-    profile="DEFAULT",
-    region="<your-region>"  # OCI region such as "us-chicago-1" or airport code such as "ORD"
-)
+#### The ADK provides an AgentClient class to simplify handling authentication and management of agent resources. Four authentication types are supported. The API key authentication is the default and most common method for authenticating with OCI services, and this is what we will be using in this project.
 
 ### Configuring your .env (config) file
 Rename the adk_projects/config/sample_.env to adk_projects/config/.env 
