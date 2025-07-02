@@ -42,6 +42,7 @@ How to actually get Python 3.13 on macOS (change it for your machine)
 
 ### API Key Authentication (Default)
 #### API key authentication is the default and most common method for authenticating with OCI services, and this is what we will be using in this project.
+`this project is deployed in Frankfurt region, please update your config file to your region`
 
 from oci.addons.adk import AgentClient
 

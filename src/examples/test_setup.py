@@ -40,7 +40,7 @@ def list_tools():
     # Create a client with your authentication details
     client = AgentClient(
         auth_type="api_key",
-        profile="DEFAULT",
+        profile="frankfurt",  ## TODO
         region=AGENT_REGION
     )
 
@@ -60,7 +60,7 @@ def main():
     # Replace the auth_type with your desired authentication method.
     client = AgentClient(
         auth_type="api_key",
-        profile="DEFAULT",
+        profile="frankfurt",
         region=AGENT_REGION,
     )
 
