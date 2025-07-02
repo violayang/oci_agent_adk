@@ -108,7 +108,7 @@ How to actually get Python 3.13 on macOS (change it for your machine)
 
 ### Authenticating your ADK app to OCI
 
-#### The ADK provides an AgentClient class to simplify handling authentication and management of agent resources. Four authentication types are supported. The API key authentication is the default and most common method for authenticating with OCI services, and this is what we will be using in this project.
+> The ADK provides an AgentClient class to simplify handling authentication and management of agent resources. Four authentication types are supported. The API key authentication is the default and most common method for authenticating with OCI services, and this is what we will be using in this project.
 
 ### Configuring your .env (config) file
 Rename the adk_projects/config/sample_.env to adk_projects/config/.env 
