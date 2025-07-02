@@ -112,6 +112,7 @@ How to actually get Python 3.13 on macOS (change it for your machine)
 
 ### Configuring your .env (config) file
 > Rename the adk_projects/config/sample_.env to adk_projects/config/.env 
+
 > Change the config variables based on your agents requirements
 
 ### Configuring and running an agent - Quick Test
@@ -119,8 +120,9 @@ How to actually get Python 3.13 on macOS (change it for your machine)
     python3.13 -m src.examples.test_setup  
 
 ### Best practices to follow while building an agent. 
-#### Below, you will see an example of how to build an agent called 'taxagent' that has 2 tools - RAG Tool and a CustomFunction.
-#### The examples demonstrate also all the steps required to achieve the final outcome - agents to answer tax related questions.
+> Below, you will see an example of how to build an agent called 'taxagent' that has 2 tools - RAG Tool and a CustomFunction.
+
+> The examples demonstrate also all the steps required to achieve the final outcome - agents to answer tax related questions.
 
 ![images/agents_deploy.png](images/agents_deploy.png)
 
