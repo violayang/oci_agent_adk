@@ -22,7 +22,7 @@ ENDPOINT       = os.getenv("OCI_VISION_GENAI_ENDPOINT")
 MODEL_ID       = os.getenv("OCI_VISION_GENAI_MODEL_ID")
 PROVIDER       = os.getenv("PROVIDER_VISION_")
 AUTH_TYPE      = "API_KEY"
-CONFIG_PROFILE = "DEFAULT"
+OCI_PROFILE = os.getenv("OCI_PROFILE")
 
 
 def initialize_vision_llm():
@@ -39,7 +39,7 @@ def initialize_vision_llm():
             "top_p": 0.75
         },
         auth_type=AUTH_TYPE,
-        auth_profile=CONFIG_PROFILE,
+        auth_profile=OCI_PROFILE,
     )
 
 # Load and encode your image (local file)

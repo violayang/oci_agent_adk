@@ -19,7 +19,7 @@ ENDPOINT       = os.getenv("OCI_GENAI_ENDPOINT")
 MODEL_ID       = os.getenv("OCI_EMBEDDING_MODEL")
 PROVIDER       = os.getenv("PROVIDER")
 AUTH_TYPE      = "API_KEY"
-CONFIG_PROFILE = "DEFAULT"
+OCI_PROFILE = os.getenv("OCI_PROFILE")
 
 
 def initialize_embedding_model():
@@ -30,7 +30,8 @@ def initialize_embedding_model():
   truncate="NONE",
   compartment_id=COMPARTMENT_ID,
   auth_type=AUTH_TYPE,
-  auth_profile=CONFIG_PROFILE
+
+  auth_profile=OCI_PROFILE
 )
 
 def test():

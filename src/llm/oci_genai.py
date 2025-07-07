@@ -19,7 +19,7 @@ ENDPOINT       = os.getenv("OCI_GENAI_ENDPOINT")
 MODEL_ID       = os.getenv("OCI_GENAI_MODEL_ID")
 PROVIDER       = os.getenv("PROVIDER")
 AUTH_TYPE      = "API_KEY"
-CONFIG_PROFILE = "DEFAULT"
+OCI_PROFILE = os.getenv("OCI_PROFILE")
 
 
 def initialize_llm():
@@ -34,7 +34,7 @@ def initialize_llm():
             # remove any unsupported kwargs like citation_types
         },
         auth_type=AUTH_TYPE,
-        auth_profile=CONFIG_PROFILE,
+        auth_profile=OCI_PROFILE,
     )
 
 def test():
