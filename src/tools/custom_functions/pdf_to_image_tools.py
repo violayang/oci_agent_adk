@@ -25,7 +25,7 @@ def convert_pdf_to_png(pdf_path, output_dir):
 
 def test_case():
     # Example usage
-    pdf_file = "images/test1.pdf"  # Path to your image-based PDF
+    pdf_file = "images/N5.pdf"  # Path to your image-based PDF
     output_folder = "images/output_images"
     convert_pdf_to_png(pdf_file, output_folder)
 
