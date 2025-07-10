@@ -15,6 +15,8 @@ PROJECT_ROOT = THIS_DIR.parent.parent.parent
 load_dotenv(PROJECT_ROOT / "config/.env")  # expects OCI_ vars in .env
 
 # Set up the OCI GenAI Agents endpoint configuration
+OCI_CONFIG_FILE = os.getenv("OCI_CONFIG_FILE")
+OCI_PROFILE = os.getenv("OCI_PROFILE")
 AGENT_EP_ID = os.getenv("AGENT_EP_ID")
 AGENT_SERVICE_EP = os.getenv("AGENT_SERVICE_EP")
 AGENT_KB_ID = os.getenv("AGENT_KB_ID")
@@ -29,7 +31,8 @@ def agent_flow_order():
     # A shared client for all agents
     client = AgentClient(
         auth_type="api_key",
-        profile="DEFAULT",
+        config=OCI_CONFIG_FILE,
+        profile=OCI_PROFILE,
         region=AGENT_REGION
     )
 

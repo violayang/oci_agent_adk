@@ -13,6 +13,8 @@ print(PROJECT_ROOT)
 load_dotenv(PROJECT_ROOT / "config/.env")  # expects OCI_ vars in .env
 
 # Set up the OCI GenAI Agents endpoint configuration
+OCI_CONFIG_FILE = os.getenv("OCI_CONFIG_FILE")
+OCI_PROFILE = os.getenv("OCI_PROFILE")
 AGENT_ID = os.getenv("AGENT_ID")
 AGENT_EP_ID = os.getenv("AGENT_EP_ID")
 AGENT_REGION = os.getenv("AGENT_REGION")
@@ -40,7 +42,8 @@ def list_tools():
     # Create a client with your authentication details
     client = AgentClient(
         auth_type="api_key",
-        profile="DEFAULT",
+        config=OCI_CONFIG_FILE,
+        profile=OCI_PROFILE,
         region=AGENT_REGION
     )
 
@@ -60,7 +63,8 @@ def main():
     # Replace the auth_type with your desired authentication method.
     client = AgentClient(
         auth_type="api_key",
-        profile="DEFAULT",
+        config=OCI_CONFIG_FILE,
+        profile=OCI_PROFILE,
         region=AGENT_REGION,
     )
 
