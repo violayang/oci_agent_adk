@@ -60,7 +60,7 @@ def setup_agent():
     client_provided_context = "[Context: The logged in user ID is: user_123] "
 
     # Handle the first user turn of the conversation
-    input = "What is the Responses API"
+    input = "Get user information for user logged in."
     input = client_provided_context + " " + input
     response = agent.run(input)
     final_message = response.data["message"]["content"]["text"]
@@ -69,14 +69,14 @@ def setup_agent():
     # response.pretty_print()
 
     # Handle the second user turn of the conversation
-    input = "Is my user account eligible for the Responses API?"
+    input = "Get more information about the organization he/she works for."
     input = client_provided_context + " " + input
     response = agent.run(input, session_id=response.session_id)
     final_message = response.data["message"]["content"]["text"]
     print(final_message)
 
     # Call the RAG Service
-    input = "what is the tax M&E adjustment for entity 1000 ?"
+    input = "“Is a $500 client lunch at steakhouse deductible?”"
     response = agent.run(input, session_id=response.session_id)
     final_message = response.data["message"]["content"]["text"]
     print(final_message)

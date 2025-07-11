@@ -138,8 +138,8 @@ RAG Tool (Pre-built tool available through OCI GenAI Agent Service -->
     oci.addons.adk.tool.prebuilt import AgenticRagTool
 
     Note: to use the RAG service, create a Knoweledge base in OCI GenAI Agent Service 
-(https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/create-knowledge-base.htm), in your tenancy, with the following sample data :
-    src/data/input_M&E_txt_RAG_1.txt
+(https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/create-knowledge-base.htm), in your tenancy, with any pdf related to tax informaiton.
+example - https://www.irs.gov/pub/irs-pdf/p463.pdf
 
 #### Step 2: Topic - Defines the areas of expertise through instructions that set the boundaries and constraints for agent conversations and abilities.
 > Topic: src/prompt_engineering/topics/tax_auditor.py
@@ -154,7 +154,7 @@ Instructions: You are a specialized assistant designed to audit and explain tax 
 
     python3.13 -m streamlit run src/app/tax_assistant/ui_taxagent.py
 
-sample prompt : get tax m&e adjustment for entity 1000
+sample prompt : Is a $500 client lunch at steakhouse deductible?
 
 #### Extra : If you want to learn how to expose an agent using FastAPI
 

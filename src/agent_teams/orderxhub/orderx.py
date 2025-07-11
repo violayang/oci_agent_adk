@@ -3,7 +3,6 @@ from typing import Dict
 from oci.addons.adk import Agent, AgentClient, tool
 from pathlib import Path
 from dotenv import load_dotenv
-from src.agents.agent_image2text import agent_flow_image2text
 from src.toolkit.fusion_scm_order_toolkit import Fusion_SCM_Order_Toolkit
 from src.tools.vision_instruct_tools import image_to_text
 # ────────────────────────────────────────────────────────
@@ -63,9 +62,9 @@ def agent_setup():
 
 
     payload = {
-        "SourceTransactionNumber": "R13_Sample_Order_ATOModel_20",
+        "SourceTransactionNumber": "R13_Sample_Order_ATOModel_21",
         "SourceTransactionSystem": "GPR",
-        "SourceTransactionId": "R13_Sample_Order_ATOModel_20",
+        "SourceTransactionId": "R13_Sample_Order_ATOModel_21",
         "TransactionalCurrencyCode": "USD",
         "BusinessUnitId": 204,
         "BuyingPartyNumber": "1006",
@@ -153,7 +152,7 @@ def agent_setup():
     print(final_message)
 
     # Get Order
-    input_prompt = "get sales order for orderid : GPR:R13_Sample_Order_ATOModel_20"
+    input_prompt = "get sales order for orderid : GPR:R13_Sample_Order_ATOModel_21"
     response = agent_order.run(input_prompt)
     final_message = response.data["message"]["content"]["text"]
     print(final_message)
