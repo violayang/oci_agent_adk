@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 # ────────────────────────────────────────────────────────
 THIS_DIR     = Path(__file__).resolve()
 PROJECT_ROOT = THIS_DIR.parent.parent.parent
-load_dotenv(PROJECT_ROOT / ".env")  # expects OCI_ vars in .env
+load_dotenv(PROJECT_ROOT / "config/.env")
 
 #────────────────────────────────────────────────────────
 # OCI GenAI configuration
@@ -30,7 +30,6 @@ def initialize_embedding_model():
   truncate="NONE",
   compartment_id=COMPARTMENT_ID,
   auth_type=AUTH_TYPE,
-
   auth_profile=OCI_PROFILE
 )
 

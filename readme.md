@@ -63,8 +63,7 @@ https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data
 
 ### MCP Client - 
 >> Support for MCP client is available on ADK through installation of 'oci-2.154.1+preview.1.228'
->> A sample code for MCP based agent can be found under
->>  python3.13 -m src.agents.getinsights
+>> A sample code for MCP based agent can be found under /src/agents/getinsights.py
 
 ### Getting started with OCI Agents in 2 step :
 #### Step 1: Infra Provisioning
