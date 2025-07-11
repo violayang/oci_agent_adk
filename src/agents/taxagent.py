@@ -77,7 +77,7 @@ def setup_agent():
 
     # Call the RAG Service
     input = "what is the tax M&E adjustment for entity 1000 ?"
-    response = agent.run(input)
+    response = agent.run(input, session_id=response.session_id)
     final_message = response.data["message"]["content"]["text"]
     print(final_message)
 
