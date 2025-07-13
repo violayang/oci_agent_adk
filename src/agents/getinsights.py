@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from oci.addons.adk.tool.prebuilt import AgenticRagTool
 from mcp.client.stdio import StdioServerParameters
 from oci.addons.adk.mcp import MCPClientStdio
+from anyio import get_cancelled_exc_class
 
 # ────────────────────────────────────────────────────────
 # 1) bootstrap paths + env + llm
@@ -25,6 +26,7 @@ AGENT_REGION = os.getenv("AGENT_REGION")
 
 
 async def agent_flow():
+    # MCP endpoint configs
     redis_server_params = StreamableHttpParameters(
         url="https://d7e385f08598.ngrok-free.app/mcp",
     )
@@ -34,6 +36,7 @@ async def agent_flow():
         args=["mcp-server-time", "--local-timezone=America/Los_Angeles"],
     )
 
+    # Start both MCP clients manually
     time_mcp_client = MCPClientStdio(params=time_server_params)
     redis_mcp_client = MCPClientStreamableHttp(params=redis_server_params)
 
@@ -41,6 +44,7 @@ async def agent_flow():
     await redis_mcp_client.__aenter__()
 
     try:
+        # Setup agent client
         client = AgentClient(
             auth_type="api_key",
             config=OCI_CONFIG_FILE,
@@ -51,33 +55,41 @@ async def agent_flow():
         agent = Agent(
             client=client,
             agent_endpoint_id=AGENT_EP_ID,
-            instructions="You are a Redis-savvy assistant.Only allow read operation with the best tool you have",
-            tools=[await time_mcp_client.as_toolkit(), await redis_mcp_client.as_toolkit()],
+            instructions="You are a Redis-savvy assistant. Only allow read operation with the best tool you have.",
+            tools=[
+                await time_mcp_client.as_toolkit(),
+                await redis_mcp_client.as_toolkit()
+            ],
         )
 
         agent.setup()
 
+        # Test input
         input_message = (
-            "What is the local time now? which Invoice I should pay first "
-            "based criteria such as highest amount due and highest past due date for "
+            "What is the local time now? Which invoice should I pay first "
+            "based on criteria such as highest amount due and highest past due date for "
             "'session:e5f6a932-6123-4a04-98e9-6b829904d27f'"
         )
 
         print(f"Running: {input_message}")
-        response = await agent.run_async(input_message)
-        response.pretty_print()
+        try:
+            response = await agent.run_async(input_message)
+            response.pretty_print()
+        except get_cancelled_exc_class():
+            print("🟡 Agent run cancelled (tool timeout or interrupt).")
 
     finally:
-        await time_mcp_client.__aexit__(None, None, None)
-        await redis_mcp_client.__aexit__(None, None, None)
+        # Clean shutdown with full cancel error suppression
+        try:
+            await time_mcp_client.__aexit__(None, None, None)
+        except get_cancelled_exc_class():
+            print("⚠️ MCPClientStdio cancelled during shutdown.")
 
-# Manual loop for Python 3.13 safety
+        try:
+            await redis_mcp_client.__aexit__(None, None, None)
+        except get_cancelled_exc_class():
+            print("⚠️ MCPClientStreamableHttp cancelled during shutdown.")
+
+
 if __name__ == "__main__":
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-
-    try:
-        loop.run_until_complete(agent_flow())
-    finally:
-        loop.run_until_complete(loop.shutdown_asyncgens())
-        loop.close()
+    asyncio.run(agent_flow())  # ✅ safe now with proper async context use
