@@ -62,7 +62,7 @@ https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data
     >> Reference link goes here ....
 
 ### MCP Client - 
->> Support for MCP client is available on ADK through installation of 'oci-2.154.1+preview.1.228'
+>> Support for MCP client is now available on ADK 
 >> A sample code for MCP based agent can be found under /src/agents/getinsights.py
 
 ### Getting started with OCI Agents in 2 step :
@@ -223,5 +223,7 @@ https://www.oracle.com/applications/fusion-ai/ai-agents/
 https://docs.oracle.com/en/solutions/ai-fraud-detection/index.html
 
 https://agents.oraclecorp.com/adk/best-practices/separate-setup-run
+
+https://agents.oraclecorp.com/adk/examples/agent-mcp-tool
 
 redis-server --dir ~/redis-data --dbfilename dump.rdb
