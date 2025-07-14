@@ -20,7 +20,8 @@ OCI_CONFIG_FILE = os.getenv("OCI_CONFIG_FILE")
 OCI_PROFILE = os.getenv("OCI_PROFILE")
 AGENT_EP_ID = os.getenv("AGENT_EP_ID")
 AGENT_SERVICE_EP = os.getenv("AGENT_SERVICE_EP")
-AGENT_KB_ID = os.getenv("AGENT_KB_ID")
+TAX_AGENT_KB_ME_ID = os.getenv("TAX_AGENT_KB_ME_ID")
+TAX_AGENT_KB_BUS_ID = os.getenv("TAX_AGENT_KB_BUS_ID")
 AGENT_REGION = os.getenv("AGENT_REGION")
 
 # ────────────────────────────────────────────────────────
@@ -37,13 +38,16 @@ def agent_flow():
     )
 
     instructions = prompt_Agent_Auditor # Assign the right topic
+    custom_instructions = (f"The RAG Tool with Tax knowledge about Meals and Entertaintment can be found under the knowledge base at {TAX_AGENT_KB_ME_ID} and Tax knowledge about Business can be found under the knowledge base at {TAX_AGENT_KB_BUS_ID} ")
+    # custom_instructions = (
+    #     f"response with not more than 10 words. Hide any PHI information from sending back to the user")
 
     agent = Agent(
         client=client,
         agent_endpoint_id=AGENT_EP_ID,
         instructions=instructions,
         tools=[
-            AgenticRagTool(knowledge_base_ids=[AGENT_KB_ID]),
+            AgenticRagTool(knowledge_base_ids=[TAX_AGENT_KB_ME_ID], description=custom_instructions),
             AccountToolkit()
         ]
     )

@@ -223,3 +223,5 @@ https://www.oracle.com/applications/fusion-ai/ai-agents/
 https://docs.oracle.com/en/solutions/ai-fraud-detection/index.html
 
 https://agents.oraclecorp.com/adk/best-practices/separate-setup-run
+
+redis-server --dir ~/redis-data --dbfilename dump.rdb
