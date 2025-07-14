@@ -1,70 +1,81 @@
-from oci.addons.adk import Agent, AgentClient
 from oci.addons.adk.run.traces import RetrievalTrace, GenerationTrace, PlanningTrace, ToolInvocationTrace
-from oci.addons.adk.tool.prebuilt import AgenticRagTool
 
-def main():
-    client = AgentClient(
-        auth_type="security_token",
-        profile="BoatOc1",
-        region="us-chicago-1"
-    )
 
-    # Assuming the knowledge base is already provisioned
-    knowledge_base_id = "ocid1.genaiagentknowledgebase..."
-
-    # Create a RAG tool that uses the knowledge base
-    rag_tool = AgenticRagTool(name="OCI Compute RAG Tool",
-                              description="You use the knowledge base to answer questions about OCI Compute.",
-                              knowledge_base_ids=[knowledge_base_id])
-
-    # Create an agent with the RAG tool
-    agent = Agent(
-        client=client,
-        agent_endpoint_id="ocid1.genaiagentendpoint...",
-        instructions="Answer question using the provided RAG tool.",
-        tools=[rag_tool]
-    )
-
-    # Set up the agent once
-    agent.setup()
-
-    # Run agent with a user query
-    input = "Tell me about Oracle Compute Service."
-    response = agent.run(input)
-    response.pretty_print()
-
+def process_trace(traces: str):
+    """
     # Access all traces from the response
-    traces = response.traces
+    :param traces:
+    :return:
+    """
 
+    trace_store =""
     # Iterate through each trace and process it according to its type
     for trace in traces:
         if isinstance(trace, PlanningTrace):
             input = trace.input
             output = trace.output
             usage = trace.usage
+            trace_store = f"input: {input}, output: {output}, usage : {usage}"
 
         elif isinstance(trace, ToolInvocationTrace):
             tool_id = trace.tool_id
             tool_name = trace.tool_name
             invocation_details = trace.invocation_details
+            trace_store = f"tool_id: {tool_id}, tool_name: {tool_name}, invocation_details : {invocation_details}"
 
         elif isinstance(trace, RetrievalTrace):
             input = trace.retrieval_input
             citations = trace.citations
+            citation_stores = []
             for citation in citations:
                 source_text = citation.source_text
                 source_location_type = citation.source_location.source_location_type
                 source_location_url = citation.source_location.url
+
+                citation_store =f"source_text: {source_text}, source_location_type: {source_location_type}, source_location_url : {source_location_url}"
+                citation_stores.add(citation_store)
             usage = trace.usage
+            trace_store = f"input: {input}, citations: {citation_stores}, usage : {usage}"
 
         elif isinstance(trace, GenerationTrace):
             input = trace.input
             output = trace.generation
             usage = trace.usage
+            trace_store = f"input: {input}, output: {output}, usage : {usage}"
 
     # Print all traces
-    response.pretty_print_traces()
+    print(trace_store)
+
+def test_cases():
+    from src.agents.taxagent import agent_flow
+    agent = agent_flow()
+    agent.setup()
+
+    # This is a context your existing code is best at producing (e.g., fetching the authenticated user id)
+    client_provided_context = "[Context: The logged in user ID is: user_123] "
+
+    # Handle the first user turn of the conversation
+    input = "Get user information for user logged in."
+    input = client_provided_context + " " + input
+    response = agent.run(input)
+    final_message = response.data["message"]["content"]["text"]
+    process_trace(response)
+
+
+    # Handle the second user turn of the conversation
+    input = "Get more information about the organization he/she works for."
+    input = client_provided_context + " " + input
+    response = agent.run(input, session_id=response.session_id)
+    final_message = response.data["message"]["content"]["text"]
+    process_trace(response)
+
+    # Call the RAG Service
+    input = "“Is a $500 client lunch at steakhouse deductible?”"
+    response = agent.run(input, session_id=response.session_id)
+    final_message = response.data["message"]["content"]["text"]
+    process_trace(response)
+
 
 
 if __name__ == "__main__":
-    main()
+    test_cases()
