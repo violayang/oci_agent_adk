@@ -62,9 +62,9 @@ def agent_setup():
 
 
     payload = {
-        "SourceTransactionNumber": "R13_Sample_Order_ATOModel_21",
+        "SourceTransactionNumber": "R13_Sample_Order_ATOModel_22",
         "SourceTransactionSystem": "GPR",
-        "SourceTransactionId": "R13_Sample_Order_ATOModel_21",
+        "SourceTransactionId": "R13_Sample_Order_ATOModel_22",
         "TransactionalCurrencyCode": "USD",
         "BusinessUnitId": 204,
         "BuyingPartyNumber": "1006",
@@ -152,7 +152,7 @@ def agent_setup():
     print(final_message)
 
     # Get Order
-    input_prompt = "get sales order for orderid : GPR:R13_Sample_Order_ATOModel_21"
+    input_prompt = "get sales order for orderid : GPR:R13_Sample_Order_ATOModel_22"
     response = agent_order.run(input_prompt)
     final_message = response.data["message"]["content"]["text"]
     print(final_message)

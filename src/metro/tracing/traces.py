@@ -15,7 +15,7 @@ def process_trace(traces: str):
             input = trace.input
             output = trace.output
             usage = trace.usage
-            trace_store = f"input: {input}, output: {output}, usage : {usage}"
+            trace_store = f"input: {input} \n output: {output} \n usage : {usage}"
 
         elif isinstance(trace, ToolInvocationTrace):
             tool_id = trace.tool_id
@@ -44,6 +44,7 @@ def process_trace(traces: str):
             trace_store = f"input: {input}, output: {output}, usage : {usage}"
 
     # Print all traces
+    print("printing all traces : ")
     print(trace_store)
 
 def test_cases():
@@ -59,22 +60,7 @@ def test_cases():
     input = client_provided_context + " " + input
     response = agent.run(input)
     final_message = response.data["message"]["content"]["text"]
-    process_trace(response)
-
-
-    # Handle the second user turn of the conversation
-    input = "Get more information about the organization he/she works for."
-    input = client_provided_context + " " + input
-    response = agent.run(input, session_id=response.session_id)
-    final_message = response.data["message"]["content"]["text"]
-    process_trace(response)
-
-    # Call the RAG Service
-    input = "“Is a $500 client lunch at steakhouse deductible?”"
-    response = agent.run(input, session_id=response.session_id)
-    final_message = response.data["message"]["content"]["text"]
-    process_trace(response)
-
+    process_trace(response.traces)
 
 
 if __name__ == "__main__":
