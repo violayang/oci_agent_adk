@@ -95,10 +95,13 @@ How to actually get Python 3.13 on macOS (change it for your machine)
     pyenv global 3.13.0
     python --version                  # now 3.13.0
 
+## Client Library
+    cd client
+
 ### Configuring and running the agent
 
-    python3.13 -m venv .venv
-    source .venv/bin/activate
+    python3.13 -m venv .venv_client
+    source .venv_client/bin/activate
 
 ### Installing all the required packages
 #### After you create a project and a virtual environment, install the latest version of required packages:
