@@ -24,13 +24,28 @@ OCI_CONFIG_FILE = os.getenv("OCI_CONFIG_FILE")
 OCI_PROFILE = os.getenv("OCI_PROFILE")
 AGENT_EP_ID = os.getenv("AGENT_EP_ID")
 AGENT_REGION = os.getenv("AGENT_REGION")
+REDIS_MCP_SERVER = os.getenv("REDIS_MCP_SERVER")
+TAVILY_MCP_SERVER = os.getenv("TAVILY_MCP_SERVER")
 
 
-async def agent_flow(input_prompt: str):
-    # MCP endpoint configs
+
+async def agent_flow(input_prompt: str, session_id:str):
+
+    # MCP REDIS Server endpoint configs
     redis_server_params = StreamableHttpParameters(
-        url="https://d7e385f08598.ngrok-free.app/mcp",
+        url=REDIS_MCP_SERVER,
     )
+
+
+    # tavily_server_params1 = StreamableHttpParameters(
+    #     url=TAVILY_MCP_SERVER,
+    # )
+
+    # Use npx
+    tavily_server_params = StdioServerParameters(
+        command="npx",
+        args=["-y", "mcp-remote", TAVILY_MCP_SERVER])
+
 
     # time_server_params = StdioServerParameters(
     #     command="uvx",
@@ -40,9 +55,11 @@ async def agent_flow(input_prompt: str):
     # Start both MCP clients manually
     # time_mcp_client = MCPClientStdio(params=time_server_params)
     redis_mcp_client = MCPClientStreamableHttp(params=redis_server_params)
+    tavily_mcp_client = MCPClientStdio(params=tavily_server_params)
 
     # await time_mcp_client.__aenter__()
     await redis_mcp_client.__aenter__()
+    await tavily_mcp_client.__aenter__()
 
     try:
         # Setup agent client
@@ -56,20 +73,25 @@ async def agent_flow(input_prompt: str):
         agent = Agent(
             client=client,
             agent_endpoint_id=AGENT_EP_ID,
-            instructions=prompt_Agent_Auditor,
+            instructions= prompt_Agent_Auditor,
             tools=[
                 # await time_mcp_client.as_toolkit(),
-                await redis_mcp_client.as_toolkit()
+                await redis_mcp_client.as_toolkit(),
+                await tavily_mcp_client.as_toolkit(),
             ],
         )
 
         agent.setup()
 
-
-
         print(f"Running: {input_prompt}")
         try:
-            response = await agent.run_async(input_prompt)
+            if(session_id == ""):
+                response = await agent.run_async(input_prompt, max_steps=10)
+            else:
+                response = await agent.run_async(input_prompt, session_id=session_id ,max_steps=10) # working on a bug with session_id
+
+            session_id = response.session_id  # <-- global variable is now updated
+            print(f"Session ID: {session_id}")
             response.pretty_print()
         except get_cancelled_exc_class():
             print("🟡 Agent run cancelled (tool timeout or interrupt).")
@@ -80,18 +102,29 @@ async def agent_flow(input_prompt: str):
         #     await time_mcp_client.__aexit__(None, None, None)
         # except get_cancelled_exc_class():
         #     print("⚠️ MCPClientStdio cancelled during shutdown.")
+        try:
+            await tavily_mcp_client.__aexit__(None, None, None)
+        except get_cancelled_exc_class():
+            print("⚠️ MCPClientStdio cancelled during tavily_mcp_client shutdown.")
 
         try:
             await redis_mcp_client.__aexit__(None, None, None)
         except get_cancelled_exc_class():
-            print("⚠️ MCPClientStreamableHttp cancelled during shutdown.")
+            print("⚠️ MCPClientStreamableHttp cancelled during redis_mcp_client shutdown.")
 
-    return response
+    return response, session_id
+
 
 if __name__ == "__main__":
     # Test input
     input_message = (
-        # "What is the local time now? Which invoice should I pay first "
-        "based on criteria such as highest amount due and highest past due date for 'session:e5f6a932-6123-4a04-98e9-6b829904d27f'"
+        "Search the internet to find out the best way to pay an invoice and based on the best practices, answer the question below? "
     )
-    asyncio.run(agent_flow(input_message))  # ✅ safe now with proper async context use
+    response, session_id = asyncio.run(agent_flow(input_message, ""))  # ✅ safe now with proper async context use
+
+    # Test input
+    input_message = (
+        "Using the best practices, answer - Which invoice should I pay first based on criteria such as highest amount due and highest past due date for 'session:e5f6a932-6123-4a04-98e9-6b829904d27f'"
+    )
+    asyncio.run(agent_flow(input_message, session_id))  # ✅ safe now with proper async context use
+
