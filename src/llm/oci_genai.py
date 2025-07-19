@@ -9,7 +9,8 @@ from dotenv import load_dotenv
 # ────────────────────────────────────────────────────────
 THIS_DIR     = Path(__file__).resolve()
 PROJECT_ROOT = THIS_DIR.parent.parent.parent
-load_dotenv(PROJECT_ROOT / ".env")  # expects OCI_ vars in .env
+print(PROJECT_ROOT)
+load_dotenv(PROJECT_ROOT / "config/.env")
 
 #────────────────────────────────────────────────────────
 # OCI GenAI configuration

@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict
 import shutil
 #from src.agents.agent_image2text import agent_flow
-from src.agent_teams.orderxhub.orderx import agent_flow_order
+from src.agents.orderx import agent_flow_order
 import traceback, json, os
 
 app = FastAPI()

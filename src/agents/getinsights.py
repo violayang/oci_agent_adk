@@ -1,3 +1,19 @@
+"""
+getinsights.py
+Author: Anup Ojah
+Date: 2025-07-18
+=================================
+==Get Business Insight Assistant==
+==================================
+This module initializes and runs an OCI GenAI Agent with Redis and Tavily MCP tool integrations.
+It supports enterprise finance-related prompts (AP, GL, AR) and enables real-time web search via Tavily.
+Workflow Overview:
+1. Load config and credentials from .env
+2. Start MCP clients for Redis and Tavily
+3. Register tools with the agent
+4. Run the agent with user input and print response
+"""
+
 import asyncio, os
 
 from mcp.client.session_group import StreamableHttpParameters
@@ -10,6 +26,7 @@ from mcp.client.stdio import StdioServerParameters
 from oci.addons.adk.mcp import MCPClientStdio
 from anyio import get_cancelled_exc_class
 from src.prompt_engineering.topics.ask_data import prompt_Agent_Auditor
+from src.llm.oci_genai_agent import initialize_oci_genai_agent_service
 
 # ────────────────────────────────────────────────────────
 # 1) bootstrap paths + env + llm
@@ -36,16 +53,10 @@ async def agent_flow(input_prompt: str, session_id:str):
         url=REDIS_MCP_SERVER,
     )
 
-
-    # tavily_server_params1 = StreamableHttpParameters(
-    #     url=TAVILY_MCP_SERVER,
-    # )
-
     # Use npx
     tavily_server_params = StdioServerParameters(
         command="npx",
         args=["-y", "mcp-remote", TAVILY_MCP_SERVER])
-
 
     # time_server_params = StdioServerParameters(
     #     command="uvx",
@@ -60,6 +71,7 @@ async def agent_flow(input_prompt: str, session_id:str):
     # await time_mcp_client.__aenter__()
     await redis_mcp_client.__aenter__()
     await tavily_mcp_client.__aenter__()
+
 
     try:
         # Setup agent client
@@ -112,19 +124,17 @@ async def agent_flow(input_prompt: str, session_id:str):
         except get_cancelled_exc_class():
             print("⚠️ MCPClientStreamableHttp cancelled during redis_mcp_client shutdown.")
 
-    return response, session_id
+    return response
 
 
 if __name__ == "__main__":
-    # Test input
-    input_message = (
-        "Search the internet to find out the best way to pay an invoice and based on the best practices, answer the question below? "
-    )
-    response, session_id = asyncio.run(agent_flow(input_message, ""))  # ✅ safe now with proper async context use
+    generative_ai_agent_runtime_client, session_id = initialize_oci_genai_agent_service()
+    print(f"<UNK> Generative AI Agent {session_id}")
 
     # Test input
     input_message = (
-        "Using the best practices, answer - Which invoice should I pay first based on criteria such as highest amount due and highest past due date for 'session:e5f6a932-6123-4a04-98e9-6b829904d27f'"
+        "Search the internet to find out the best way to pay an invoice. "
+        "Using the best practices from above, answer - Which invoice should I pay first based on criteria such as highest amount due and highest past due date for 'session:e5f6a932-6123-4a04-98e9-6b829904d27f'"
     )
-    asyncio.run(agent_flow(input_message, session_id))  # ✅ safe now with proper async context use
+    asyncio.run(agent_flow(input_message, session_id)) # ✅ safe now with proper async context use
 

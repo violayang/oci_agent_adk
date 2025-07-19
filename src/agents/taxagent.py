@@ -1,9 +1,23 @@
+"""
+taxagent.py
+Author: Anup Ojah
+Date: 2025-07-18
+==========================
+==Tax Auditor Assistant==
+==========================
+This module is a specialized assistant designed to audit and explain tax amounts applied to business transactions
+Workflow Overview:
+1. Load config and credentials from .env
+2. Register tools with the agent - AgenticRagTool, SQL Tool
+3. Run the agent with user input and print response
+"""
+
 import os
 from typing import Dict
 from oci.addons.adk import Agent, AgentClient, tool
 from pathlib import Path
 from dotenv import load_dotenv
-from src.tools.custom_function_tools import AccountToolkit
+from src.toolkit.user_info import AccountToolkit
 from oci.addons.adk.tool.prebuilt import AgenticRagTool
 from src.prompt_engineering.topics.tax_auditor import prompt_Agent_Auditor
 

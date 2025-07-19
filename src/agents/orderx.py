@@ -1,3 +1,19 @@
+"""
+orderx.py
+Author: Anup Ojah
+Date: 2025-07-18
+==========================
+==Order Taking Assistant==
+==========================
+This module is an order-taking assistant designed to support sales workflows by extracting
+customer order information from uploaded images and interacting with external order APIs such as Fusion SCM
+Workflow Overview:
+1. Load config and credentials from .env
+2. Register tools with the agent - image_to_text, create_sales_order, get_sales_order
+3. Extract structured output from image_to_text to be able to create and order
+4. Run the agent with user input and print response
+"""
+
 import os
 from typing import Dict
 from oci.addons.adk import Agent, AgentClient, tool
@@ -5,6 +21,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from src.toolkit.fusion_scm_order_toolkit import Fusion_SCM_Order_Toolkit
 from src.tools.vision_instruct_tools import image_to_text
+from src.prompt_engineering.topics.order_assistant import prompt_order_assistant
 # ────────────────────────────────────────────────────────
 # 1) bootstrap paths + env + llm
 # ────────────────────────────────────────────────────────
@@ -35,14 +52,7 @@ def agent_flow_order():
         region=AGENT_REGION
     )
 
-    instructions = """
-                You are order taking assistant. Don't make any decision of your own and simply follow the prompt to execute the right tool.
-                Use the too 'image_to_text' to convert an image to text. When using this tool, please extract 
-                    ***Customer Name***, ***Contact*** ***Address***, ***Item***, ***Quantity and ***Date***
-                Use the tool 'create_sales_order' to create sales order by invoking an External REST API. When using this tool, please add the following to the final answer:
-                    Your Order has been processed correctly and OrderNumber created is {OrderNumber}.
-                Use the tool 'get_sales_order' to get sales order by invoking an External REST API.
-                """
+    instructions = prompt_order_assistant
     agent_order = Agent(
         client=client,
         agent_endpoint_id=AGENT_EP_ID,
@@ -138,7 +148,11 @@ def agent_setup():
     PROJECT_ROOT = THIS_DIR.parent.parent.parent.parent
 
     image_path = f"{PROJECT_ROOT}/images/orderhub_handwritten.jpg"
-    question = "/n Get all the order details from the uploaded image. Format the response using a JSON schema. Tempe = Tampa"
+    question = """
+    Get all the order details from the uploaded image.Output your answer as JSON that  "
+            "matches the given schema: \`\`\`json\n{schema}\n\`\`\`. "
+            "Make sure to wrap the answer in \`\`\`json and \`\`\` tags"
+    """
     # Read Order
     input_prompt = image_path + "   " + question
     response = agent_order.run(input_prompt)
