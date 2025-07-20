@@ -4,9 +4,6 @@
 > The ADK LandingZone is a python project build using OCI SDK for Agent Development, Oracle GenAI and Agent Services along with few popular open-source framework like Langchain, FastAPI and Streamlit. The design pattern adopted allows reusability of code, good coding practice with security in mind, resulting in developers to focus more on the business logic vs spending time on the agent development engineering concepts.
 
 
-#### Understanding the Agentic Framework: A Blueprint for Autonomous system
-> https://github.com/aojah1/agents/blob/main/Agentic%20Framework_1.2_Feb03_MM_Anup.pdf
-
 ### ADK REFERENCE ARCHITECTURE
 #### How it Works
 
@@ -47,7 +44,7 @@ Use a consistent pattern :
 CONTEXT >> ROLE >> OBJECTIVE >> FORMAT >> TONE / STYLE >> CONSTRAINTS
 
 ### llm
-> One common place to configure all LLMs the agents are going to use.
+> One common place to configure access to OCI-hosted LLMs, BYO LLMs through DataScience Quick Action
 
 ### METRO
 > MONITORING >> EVALUATION >> TRACING >> REPORTING > OBSERVABILITY
@@ -66,13 +63,15 @@ https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data
     >> Reference link goes here ....
 
 ### MCP Client - 
->> Support for MCP client is now available on ADK 
->> A sample code for MCP based agent can be found under /src/agents/getinsights.py
+> Support for MCP client is now available on ADK
+> 
+> A sample code for MCP based agent can be found under : 
+    /src/agents/getinsights.py
 
 ### Getting started with OCI Agents in 2 step :
 #### Step 1: Infra Provisioning
 
-> Provisioning an agent endpoint using the OCI Console. 
+> Provisioning an agent endpoint using the OCI Console.
 
 > You create an agent instance in the cloud, and provision an agent endpoint under that agent instance. 
 
@@ -80,8 +79,13 @@ https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data
 
 #### Step 2: Configure your development environment
 
-### Clone the repository
-git clone https://github.com/aojah1/adk_projects.git
+> Fork the repository
+
+    https://github.com/aojah1/adk_projects
+
+> Clone the fork locally
+
+    git clone https://github.com/<your_user_name>/adk_projects.git
 
 ### Optional commands
 How to actually get Python 3.13 on macOS (change it for your machine)
@@ -233,4 +237,5 @@ https://agents.oraclecorp.com/adk/best-practices/separate-setup-run
 
 https://agents.oraclecorp.com/adk/examples/agent-mcp-tool
 
-redis-server --dir ~/redis-data --dbfilename dump.rdb
+https://github.com/aojah1/agents/blob/main/Agentic%20Framework_1.2_Feb03_MM_Anup.pdf
+
