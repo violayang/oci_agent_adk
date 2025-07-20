@@ -1,4 +1,7 @@
-### Oracle Agent Development Kit (ADK) for building Agentic AI applications
+### Oracle Agent Development Kit (ADK) - LandingZone
+> ADK LandingZone is to allow developers to build AI Agents on Oracle Cloud with speed, scalability and reliability. 
+> The ADK LandingZone is a python project build using OCI SDK for Agent Development, Oracle GenAI and Agent Services along with few popular open-source framework like Langchain, FastAPI and Streamlit. The design pattern adopted allows reusability of code, good coding practice with security in mind, resulting in developers to focus more on the business logic vs spending time on the agent development engineering concepts.
+
 
 #### Understanding the Agentic Framework: A Blueprint for Autonomous system
 > https://github.com/aojah1/agents/blob/main/Agentic%20Framework_1.2_Feb03_MM_Anup.pdf
