@@ -52,13 +52,25 @@ def agent_flow_order():
         region=AGENT_REGION
     )
 
-    instructions = prompt_order_assistant
+    #instructions = prompt_order_assistant
+    instructions = """
+    You are a pass-through agent.
+
+Your sole responsibility is to execute the requested tool and return its raw output exactly as-is.
+
+Do not rephrase, summarize, analyze, or interpret the tool response in any way.
+
+If the tool returns a JSON object, your final response must be the exact same JSON — unmodified and unwrapped. Do not add commentary, context, or explanations.
+
+Respond only with the raw tool output.
+
+    """
     agent_order = Agent(
         client=client,
         agent_endpoint_id=AGENT_EP_ID,
         instructions=instructions,
         tools=[
-            Fusion_SCM_Order_Toolkit(), image_to_text
+            image_to_text
         ]
     )
 
@@ -142,34 +154,37 @@ def agent_setup():
         ]
     }
 
-    from pathlib import Path
-
-    THIS_DIR = Path(__file__).resolve()
-    PROJECT_ROOT = THIS_DIR.parent.parent.parent.parent
-
     image_path = f"{PROJECT_ROOT}/images/orderhub_handwritten.jpg"
     question = """
-    Get all the order details from the uploaded image.Output your answer as JSON that  "
-            "matches the given schema: \`\`\`json\n{schema}\n\`\`\`. "
-            "Make sure to wrap the answer in \`\`\`json and \`\`\` tags"
-    """
+Get all information about the order.
+"""
     # Read Order
     input_prompt = image_path + "   " + question
-    response = agent_order.run(input_prompt)
+    response = agent_order.run(input_prompt, max_steps=1)
     final_message = response.data["message"]["content"]["text"]
     print(final_message)
 
-    # Create Order
-    input_prompt = f"Create a sales order in Oracle SCM using a properly structured JSON payload.: /n   {payload}"
-    response = agent_order.run(input_prompt)
-    final_message = response.data["message"]["content"]["text"]
-    print(final_message)
+    # # Create Order
+    # input_prompt = f"Create a sales order in Oracle SCM using a properly structured JSON payload.: /n   {payload}"
+    # response = agent_order.run(input_prompt)
+    # final_message = response.data["message"]["content"]["text"]
+    # print(final_message)
+    #
+    # # Get Order
+    # input_prompt = "get sales order for orderid : GPR:R13_Sample_Order_ATOModel_22"
+    # response = agent_order.run(input_prompt)
+    # final_message = response.data["message"]["content"]["text"]
+    # print(final_message)# Create Order
+    # input_prompt = f"Create a sales order in Oracle SCM using a properly structured JSON payload.: /n   {payload}"
+    # response = agent_order.run(input_prompt)
+    # final_message = response.data["message"]["content"]["text"]
+    # print(final_message)
 
-    # Get Order
-    input_prompt = "get sales order for orderid : GPR:R13_Sample_Order_ATOModel_22"
-    response = agent_order.run(input_prompt)
-    final_message = response.data["message"]["content"]["text"]
-    print(final_message)
+    # # Get Order
+    # input_prompt = "get sales order for orderid : GPR:R13_Sample_Order_ATOModel_22"
+    # response = agent_order.run(input_prompt)
+    # final_message = response.data["message"]["content"]["text"]
+    # print(final_message)
 
 if __name__ == '__main__':
     agent_setup()

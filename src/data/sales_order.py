@@ -1,39 +1,5 @@
-
-import json
-import re
-from pydantic import BaseModel, Field, ValidationError
-from langchain_core.messages import AIMessage
-from langchain_core.prompts import ChatPromptTemplate
-from typing import List, Optional
 from pydantic import BaseModel, Field
-from langchain.prompts import PromptTemplate
-from src.llm.oci_genai import initialize_llm
-
-llm = initialize_llm()
-
-# Custom parser
-def extract_json(message: AIMessage) -> List[dict]:
-    """Extracts JSON content from a string where JSON is embedded between \`\`\`json and \`\`\` tags.
-
-    Parameters:
-        text (str): The text containing the JSON content.
-
-    Returns:
-        list: A list of extracted JSON strings.
-    """
-    text = message.content
-    # Define the regular expression pattern to match JSON blocks
-    pattern = r"\`\`\`json(.*?)\`\`\`"
-
-    # Find all non-overlapping matches of the pattern in the string
-    matches = re.findall(pattern, text, re.DOTALL)
-
-    # Return the list of matched JSON strings, stripping any leading or trailing whitespace
-    try:
-        return [json.loads(match.strip()) for match in matches]
-    except Exception:
-        raise ValueError(f"Failed to parse: {message}")
-
+from typing import List, Optional
 
 class BillToCustomer(BaseModel):
     """
@@ -92,50 +58,3 @@ class Transaction(BaseModel):
     billToCustomer: Optional[List[BillToCustomer]] = Field(None, description="List of bill-to customer details")
     shipToCustomer: Optional[List[ShipToCustomer]] = Field(None, description="List of ship-to customer details")
     lines: Optional[List[LineItem]] = Field(None, description="List of transaction line items")
-
-
-def llm_structured_output():
-    trans_schema_str = json.dumps(Transaction.model_json_schema(), indent=2)
-
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                "You are a helpful assistant. Use the schema below to extract structured JSON from the user's request.\n"
-                "Respond with valid JSON inside triple backticks like ```json ... ```.\n\n"
-                "Schema:\n```json\n{trans_schema}\n```"
-            ),
-            ("human", "{query}")
-        ]
-    ).partial(trans_schema=trans_schema_str)
-
-    query = """
-BillToCustomer : 111000 
-ShipToCustomer: 10124 Louisville
-- Item: STOVE-ATO-Model, Quantity: 1, Requested Date: 20-JUL-25
-- Item: GAS-FUEL, Quantity: 1, Requested Date: 20-JUL-25
-- Item: BURNER-4-GRID, Quantity: 1, Requested Date: 20-JUL-25
-"""
-
-    chain = prompt | llm | extract_json
-
-    try:
-        response = chain.invoke({"query": query})
-        print("🔍 Raw LLM Output:")
-        print(json.dumps(response, indent=2))
-
-        validated = Transaction.parse_obj(response[0])
-        print("\n✅ Validated Structured Output:")
-        print(validated.json(indent=2))
-        return validated
-
-    except ValidationError as e:
-        print("❌ Schema validation failed:\n", e)
-    except Exception as ex:
-        print("❌ Failed to extract structured response:\n", ex)
-
-    return response
-
-if __name__ == "__main__":
-    response = llm_structured_output()
-    print(json.dumps(response, indent=2))
