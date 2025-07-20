@@ -104,7 +104,7 @@ How to actually get Python 3.13 on macOS (change it for your machine)
     python --version                  # now 3.13.0
 
 ## Client Library
-    cd client
+    cd adk_projects
 
 ### Configuring and running the agent
 
