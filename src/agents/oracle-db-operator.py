@@ -1,15 +1,15 @@
 """
 oracle-db-operator.py
 Author: Anup Ojah
-Date: 2025-07-18
+Date: 2025-23-18
 =================================
-==Get Business Insight Assistant==
+==Oracle Database Operator==
 ==================================
-This module initializes and runs an OCI GenAI Agent with Redis and Tavily MCP tool integrations.
-It supports enterprise finance-related prompts (AP, GL, AR) and enables real-time web search via Tavily.
+This agent integrates with Oracle DB SQLCl MCP Server, allowing NL conversation with any Oracle Database (19 c or higher).
+https://docs.oracle.com/en/database/oracle/sql-developer-command-line/25.2/sqcug/using-oracle-sqlcl-mcp-server.html
 Workflow Overview:
 1. Load config and credentials from .env
-2. Start MCP clients for Redis and Tavily
+2. Start MCP clients for SQLCL
 3. Register tools with the agent
 4. Run the agent with user input and print response
 """
