@@ -27,6 +27,8 @@ from oci.addons.adk.mcp import MCPClientStdio
 from anyio import get_cancelled_exc_class
 from src.prompt_engineering.topics.ask_data import prompt_Agent_Auditor
 from src.llm.oci_genai_agent import initialize_oci_genai_agent_service
+from src.llm.oci_genai_agent import initialize_oci_genai_agent_service
+from src.prompt_engineering.topics.oracle_db_operator import promt_oracle_db_operator
 
 # ────────────────────────────────────────────────────────
 # 1) bootstrap paths + env + llm
@@ -41,8 +43,7 @@ OCI_CONFIG_FILE = os.getenv("OCI_CONFIG_FILE")
 OCI_PROFILE = os.getenv("OCI_PROFILE")
 AGENT_EP_ID = os.getenv("AGENT_EP_ID")
 AGENT_REGION = os.getenv("AGENT_REGION")
-REDIS_MCP_SERVER = os.getenv("REDIS_MCP_SERVER")
-TAVILY_MCP_SERVER = os.getenv("TAVILY_MCP_SERVER")
+
 
 
 
@@ -61,10 +62,12 @@ async def start_sql_agent():
         region=AGENT_REGION
     )
 
+    instructions = promt_oracle_db_operator
+
     agent = Agent(
         client=client,
         agent_endpoint_id=AGENT_EP_ID,
-        instructions=prompt_Agent_Auditor,
+        instructions=instructions,
         tools=[
             await adb_mcp_client.as_toolkit(),
         ],
@@ -74,7 +77,7 @@ async def start_sql_agent():
 
     return agent, adb_mcp_client  # return both to close later
 
-async def main():
+async def main(session_id: str):
     agent, mcp_client = await start_sql_agent()
 
     try:
@@ -85,7 +88,13 @@ async def main():
                     print("🛑 Exiting agent loop...")
                     break
                 print(f"▶️ Running: {input_message}")
-                response = await agent.run_async(input_message, max_steps=10)
+                if (session_id == ""):
+                    response = await agent.run_async(input_message, max_steps=10)
+                else:
+                    response = await agent.run_async(input_message,  max_steps=10)  # working on a bug with session_id
+
+                session_id = response.session_id  # <-- global variable is now updated
+                print(f"Session ID: {session_id}")
                 response.pretty_print()
             except KeyboardInterrupt:
                 print("\n🛑 KeyboardInterrupt received. Exiting...")
@@ -101,4 +110,5 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    generative_ai_agent_runtime_client, session_id = initialize_oci_genai_agent_service()
+    asyncio.run(main(session_id))
