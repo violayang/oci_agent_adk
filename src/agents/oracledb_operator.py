@@ -25,8 +25,6 @@ from oci.addons.adk.tool.prebuilt import AgenticRagTool
 from mcp.client.stdio import StdioServerParameters
 from oci.addons.adk.mcp import MCPClientStdio
 from anyio import get_cancelled_exc_class
-from src.prompt_engineering.topics.ask_data import prompt_Agent_Auditor
-from src.llm.oci_genai_agent import initialize_oci_genai_agent_service
 from src.llm.oci_genai_agent import initialize_oci_genai_agent_service
 from src.prompt_engineering.topics.oracle_db_operator import promt_oracle_db_operator
 
