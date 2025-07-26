@@ -160,7 +160,7 @@ Get all information about the order.
 """
     # Read Order
     input_prompt = image_path + "   " + question
-    response = agent_order.run(input_prompt, max_steps=1)
+    response = agent_order.run(input_prompt, max_steps=10)
     final_message = response.data["message"]["content"]["text"]
     print(final_message)
 
