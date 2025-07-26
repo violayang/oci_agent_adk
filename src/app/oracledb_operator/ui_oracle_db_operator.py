@@ -1,11 +1,16 @@
 import asyncio
 import streamlit as st
 from anyio import get_cancelled_exc_class  # Assuming this is needed from your code
-
+from src.agents.oracledb_operator import start_sql_agent
 
 # Helper to run async functions synchronously in Streamlit
 def run_async(coro):
-    loop = asyncio.get_event_loop()
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError:  # No current event loop in thread
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+    
     if loop.is_running():
         # If loop is already running (e.g., in some environments), use nested asyncio
         return asyncio.run_coroutine_threadsafe(coro, loop).result()
