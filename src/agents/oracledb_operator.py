@@ -1,5 +1,5 @@
 """
-oracle-db-operator.py
+oracledb_operator.py
 Author: Anup Ojah
 Date: 2025-23-18
 =================================
@@ -45,8 +45,6 @@ AGENT_EP_ID = os.getenv("AGENT_EP_ID")
 AGENT_REGION = os.getenv("AGENT_REGION")
 
 
-
-
 async def start_sql_agent():
     # Initialize SQLcl MCP Tool (Persistent)
     adb_server_params = StdioServerParameters(
@@ -76,6 +74,17 @@ async def start_sql_agent():
     agent.setup()
 
     return agent, adb_mcp_client  # return both to close later
+
+async def run_sql_operator_once(agent, user_input: str):
+    """
+    Executes a single input with the initialized agent and returns the pretty-printed response.
+    """
+    print(f"▶️ Sending input: {user_input}")
+    response = await agent.run_async(user_input.strip(), max_steps=10)
+    print("✅ Agent responded.")
+    return response.pretty()
+
+
 
 async def main(session_id: str):
     agent, mcp_client = await start_sql_agent()
