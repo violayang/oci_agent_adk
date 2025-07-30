@@ -1,16 +1,16 @@
 """
-orderx.py
+create_sales_order.py
 Author: Anup Ojah
-Date: 2025-07-18
+Date: 2025-07-30
 ==========================
 ==Order Taking Assistant==
 ==========================
 This module is an order-taking assistant designed to support sales workflows by extracting
-customer order information from uploaded images and interacting with external order APIs such as Fusion SCM
+customer order information from uploaded images and creates a sales order by posting data to APIs such as Fusion SCM
 Workflow Overview:
 1. Load config and credentials from .env
-2. Register tools with the agent - image_to_text, create_sales_order, get_sales_order
-3. Extract structured output from image_to_text to be able to create and order
+2. Register tools with the agent - create_sales_order, get_sales_order
+3. Extract structured output from image_to_text to be able to create an order
 4. Run the agent with user input and print response
 """
 
@@ -42,7 +42,7 @@ AGENT_REGION = os.getenv("AGENT_REGION")
 # 2) Logic
 # ────────────────────────────────────────────────────────
 
-def agent_flow_order():
+def agent_create_sales_order():
 
     # A shared client for all agents
     client = AgentClient(
@@ -52,36 +52,23 @@ def agent_flow_order():
         region=AGENT_REGION
     )
 
-    #instructions = prompt_order_assistant
-    instructions = """
-    You are a pass-through agent.
+    instructions = prompt_order_assistant
 
-Your sole responsibility is to execute the requested tool and return its raw output exactly as-is.
-
-Do not rephrase, summarize, analyze, or interpret the tool response in any way.
-
-If the tool returns a JSON object, your final response must be the exact same JSON — unmodified and unwrapped. Do not add commentary, context, or explanations.
-
-Respond only with the raw tool output.
-
-    """
-    agent_order = Agent(
+    create_sales_order_agent = Agent(
         client=client,
         agent_endpoint_id=AGENT_EP_ID,
         instructions=instructions,
         tools=[
-            image_to_text
+            Fusion_SCM_Order_Toolkit()
         ]
     )
 
-
-    agent_order.setup()
-    return agent_order
+    return create_sales_order_agent
 
 def agent_setup():
 
     agent_order = agent_flow_order()
-
+    agent_order.setup()
 
     payload = {
         "SourceTransactionNumber": "R13_Sample_Order_ATOModel_22",
@@ -158,33 +145,23 @@ def agent_setup():
     question = """
 Get all information about the order.
 """
-    # Read Order
-    input_prompt = image_path + "   " + question
-    response = agent_order.run(input_prompt, max_steps=10)
+    # # Read Order
+    # input_prompt = image_path + "   " + question
+    # response = agent_order.run(input_prompt, max_steps=10)
+    # final_message = response.data["message"]["content"]["text"]
+    # print(final_message)
+
+    # Create Order
+    input_prompt = f"Create a sales order in Oracle SCM using a properly structured JSON payload.: /n   {payload}"
+    response = agent_order.run(input_prompt)
     final_message = response.data["message"]["content"]["text"]
     print(final_message)
 
-    # # Create Order
-    # input_prompt = f"Create a sales order in Oracle SCM using a properly structured JSON payload.: /n   {payload}"
-    # response = agent_order.run(input_prompt)
-    # final_message = response.data["message"]["content"]["text"]
-    # print(final_message)
-    #
-    # # Get Order
-    # input_prompt = "get sales order for orderid : GPR:R13_Sample_Order_ATOModel_22"
-    # response = agent_order.run(input_prompt)
-    # final_message = response.data["message"]["content"]["text"]
-    # print(final_message)# Create Order
-    # input_prompt = f"Create a sales order in Oracle SCM using a properly structured JSON payload.: /n   {payload}"
-    # response = agent_order.run(input_prompt)
-    # final_message = response.data["message"]["content"]["text"]
-    # print(final_message)
-
-    # # Get Order
-    # input_prompt = "get sales order for orderid : GPR:R13_Sample_Order_ATOModel_22"
-    # response = agent_order.run(input_prompt)
-    # final_message = response.data["message"]["content"]["text"]
-    # print(final_message)
+    # Get Order
+    input_prompt = "get sales order for orderid : GPR:R13_Sample_Order_ATOModel_22"
+    response = agent_order.run(input_prompt)
+    final_message = response.data["message"]["content"]["text"]
+    print(final_message)
 
 if __name__ == '__main__':
     agent_setup()

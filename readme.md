@@ -49,6 +49,9 @@ CONTEXT >> ROLE >> OBJECTIVE >> FORMAT >> TONE / STYLE >> CONSTRAINTS
 ### METRO
 > MONITORING >> EVALUATION >> TRACING >> REPORTING > OBSERVABILITY
 
+### Guardrails
+> 
+
 ### MCP Server - 
 
 #### The Model Context Protocol (MCP) is an open standard that enables developers to build secure, two‑way connections between their data sources and AI-powered tools, acting like a “USB‑C port” for AI models to access external context 

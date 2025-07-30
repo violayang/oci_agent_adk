@@ -20,10 +20,13 @@ from dotenv import load_dotenv
 from src.toolkit.user_info import AccountToolkit
 from oci.addons.adk.tool.prebuilt import AgenticRagTool
 from src.prompt_engineering.topics.tax_auditor import prompt_Agent_Auditor
+import logging
 
 # ────────────────────────────────────────────────────────
 # 1) bootstrap paths + env + llm
 # ────────────────────────────────────────────────────────
+logging.getLogger('adk').setLevel(logging.DEBUG)
+
 THIS_DIR     = Path(__file__).resolve()
 PROJECT_ROOT = THIS_DIR.parent.parent.parent
 
