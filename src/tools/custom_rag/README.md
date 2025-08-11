@@ -53,7 +53,7 @@
     pip install -r requirements.txt
     ```
 7. Your OCI config file must be located at `~/.oci/config`. Ensure that this file is properly configured by following this OCI documentation: https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm
-8. Edit environment variables as desired in a new `config/.env` file in `OCI Custom RAG Configuration` section, using `config/sample_.env` as a reference. A sample PDF source document is included at `local_files/finance_data.pdf`. You may choose to source this file from its current location, or upload this PDF document to an Object Storage bucket and source from that location.
+8. Edit environment variables as desired in a new `config/.env` file in `OCI Custom RAG Configuration` and `OCI credentials - Cohere Model` sections, using `config/sample_.env` as a reference. A sample PDF source document is included at `local_files/finance_data.pdf`. You may choose to source this file from its current location, or upload this PDF document to an Object Storage bucket and source from that location. Note: You can use `cohere` or `meta` as a provider.
     ```
     # Copy the config/sample_.env file to a new file called config/.env
     cp config/sample_.env config/.env
@@ -65,6 +65,6 @@
     ```
 9. Run the Custom RAG module:
     ```
-    python3.13 src/tools/custom_rag/main.py
+    python3.13 -m src.tools.custom_rag.main
     ```
 10. Observe the response returned from the Custom RAG module, and note whether the returned information is accurate to the source content in the PDF document.

@@ -10,7 +10,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 THIS_DIR     = Path(__file__).resolve()
-PROJECT_ROOT = THIS_DIR.parent.parent.parent
+PROJECT_ROOT = THIS_DIR.parent.parent.parent.parent
 
 load_dotenv(PROJECT_ROOT / "config/.env")  # expects vars in .env
 
@@ -21,8 +21,6 @@ BUCKET_NAME = os.getenv("BUCKET_NAME")
 print("BUCKET_NAME: " + BUCKET_NAME)
 BUCKET_PDF_NAME = os.getenv("BUCKET_PDF_NAME")
 print("BUCKET_PDF_NAME: " + BUCKET_PDF_NAME)
-OCI_GENAI_LLM_COMPARTMENT_ID = os.getenv("OCI_GENAI_LLM_COMPARTMENT_ID")
-print("OCI_GENAI_LLM_COMPARTMENT_ID: " + OCI_GENAI_LLM_COMPARTMENT_ID)
 OCI_GENAI_EMBEDDINGS_MODEL_COMPARTMENT_ID = os.getenv("OCI_GENAI_EMBEDDINGS_MODEL_COMPARTMENT_ID")
 print("OCI_GENAI_EMBEDDINGS_MODEL_COMPARTMENT_ID: " + OCI_GENAI_EMBEDDINGS_MODEL_COMPARTMENT_ID)
 OCI_CONFIG_PROFILE_NAME = os.getenv("OCI_CONFIG_PROFILE_NAME")
@@ -42,24 +40,9 @@ from langchain_community.document_loaders import PyPDFLoader
 
 ## Initialize LLM
 
-from langchain_community.chat_models import ChatOCIGenAI
+from ...llm.oci_genai import initialize_llm
 
-# initialize interface
-chat = ChatOCIGenAI(
-    model_id="ocid1.generativeaimodel.oc1.us-chicago-1.amaaaaaask7dceyajqi26fkxly6qje5ysvezzrypapl7ujdnqfjq6hzo2loq",
-    service_endpoint="https://inference.generativeai.us-chicago-1.oci.oraclecloud.com",
-    compartment_id=OCI_GENAI_LLM_COMPARTMENT_ID,
-    provider="meta",
-    model_kwargs={
-        "temperature": 1,
-        "max_tokens": 600,
-        "frequency_penalty": 0,
-        "presence_penalty": 0,
-        "top_p": 0.75
-    },
-    auth_type="API_KEY", # The authentication type to use, e.g., API_KEY (default), SECURITY_TOKEN, INSTANCE_PRINCIPAL, RESOURCE_PRINCIPAL.
-    auth_profile=OCI_CONFIG_PROFILE_NAME
-)
+chat = initialize_llm()
 
 ## Load PDF
 
