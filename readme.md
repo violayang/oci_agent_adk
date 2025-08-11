@@ -198,7 +198,11 @@ sample prompt : Is a $500 client lunch at steakhouse deductible?
 > OCI RAG agent pre-built service as a tool
 
 #### slack_tools : 
-> Enable an Agent to write and send a slack message to an organization channel
+> Enable an Agent to write and send a slack message to an organization channel.
+> 
+> This tool is made available over an MCP Server. See source code here :
+> 
+> https://github.com/aojah1/mcp/tree/main/mcp_server/slack-mcp-server
 
 #### speech_instruct_tools : 
 > Convert Speech to Text tool
