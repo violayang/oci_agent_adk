@@ -21,10 +21,6 @@ BUCKET_NAME = os.getenv("BUCKET_NAME")
 print("BUCKET_NAME: " + BUCKET_NAME)
 BUCKET_PDF_NAME = os.getenv("BUCKET_PDF_NAME")
 print("BUCKET_PDF_NAME: " + BUCKET_PDF_NAME)
-OCI_GENAI_EMBEDDINGS_MODEL_COMPARTMENT_ID = os.getenv("OCI_GENAI_EMBEDDINGS_MODEL_COMPARTMENT_ID")
-print("OCI_GENAI_EMBEDDINGS_MODEL_COMPARTMENT_ID: " + OCI_GENAI_EMBEDDINGS_MODEL_COMPARTMENT_ID)
-OCI_CONFIG_PROFILE_NAME = os.getenv("OCI_CONFIG_PROFILE_NAME")
-print("OCI_CONFIG_PROFILE_NAME: " + OCI_CONFIG_PROFILE_NAME)
 OBJECT_STORAGE_NAMESPACE_NAME = os.getenv("OBJECT_STORAGE_NAMESPACE_NAME")
 print("OBJECT_STORAGE_NAMESPACE_NAME: " + OBJECT_STORAGE_NAMESPACE_NAME)
 LOCAL_PDF_PATH = os.getenv("LOCAL_PDF_PATH")
@@ -112,20 +108,24 @@ for i in range(len(texts)):
     # doc = texts[i]
     documents.append(doc)
 
-from langchain_community.embeddings import OCIGenAIEmbeddings
+# from langchain_community.embeddings import OCIGenAIEmbeddings
+from src.llm.oci_embedding_model import initialize_embedding_model
 
-embeddings = OCIGenAIEmbeddings(
-    model_id="cohere.embed-english-v3.0",
-    service_endpoint="https://inference.generativeai.us-chicago-1.oci.oraclecloud.com",
-    truncate="NONE",
-    compartment_id=OCI_GENAI_EMBEDDINGS_MODEL_COMPARTMENT_ID,
-    auth_type="API_KEY",
-    auth_profile=OCI_CONFIG_PROFILE_NAME
-)
+# embeddings = OCIGenAIEmbeddings(
+#     model_id="cohere.embed-english-v3.0",
+#     service_endpoint="https://inference.generativeai.us-chicago-1.oci.oraclecloud.com",
+#     truncate="NONE",
+#     compartment_id=OCI_GENAI_EMBEDDINGS_MODEL_COMPARTMENT_ID,
+#     auth_type="API_KEY",
+#     auth_profile=OCI_CONFIG_PROFILE_NAME
+# )
 
 ## Initialize a vector database
 
-embed_model = embeddings
+# embed_model = embeddings
+
+embed_model = initialize_embedding_model()
+
 vectordb = Chroma(
     collection_name='summaries',
     embedding_function=embed_model,
