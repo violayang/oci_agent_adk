@@ -62,8 +62,9 @@ CONTEXT >> ROLE >> OBJECTIVE >> FORMAT >> TONE / STYLE >> CONSTRAINTS
 https://blogs.oracle.com/ai-and-datascience/post/hosting-mcp-servers-on-oci-data-science
 
 > MCP Server 2:
-    >> Deploy Select AI based tools and make is available through OCI ADW
-    >> Reference link goes here ....
+    >> Create/Deploy MCP Servers for Oracle DB Tools, Redis Cache, Slack 
+    >> 
+https://github.com/aojah1/mcp
 
 ### MCP Client - 
 > Support for MCP client is now available on ADK
@@ -147,7 +148,7 @@ CustomFunction -->
 
     python3.13 -m src.tools.custom_function_tools
 
-RAG Tool (Pre-built tool available through OCI GenAI Agent Service --> 
+RAG Tool - Pre-built tool available through OCI GenAI Agent Service --> 
 
     oci.addons.adk.tool.prebuilt import AgenticRagTool
 
@@ -186,16 +187,26 @@ sample prompt : Is a $500 client lunch at steakhouse deductible?
 > Send an end user to user form interface to perform specific actions along with the required context
 
 #### document_tool : 
-> upload or reference unstructured documents for semantic search and retrieval upon which to ground an answer or response
+> Allows admins to upload company-specific documents (e.g., benefits policies). The agent uses Retrieval-Augmented Generation (RAG) to find answers within these documents.
+
+> Follow the source code here how to automate document ingestions into OCI RAG Service :
+
+> src/data/ (tbd...)
 
 #### email_tools : 
 > Enable an Agent to write and send an email to a human receipt
+
+> WIP...
 
 #### external_REST_tools : 
 > Connect to any service to integrate any data and functionality with a public REST interface
 
 #### oci_rag_service_tools : 
 > OCI RAG agent pre-built service as a tool
+
+> This is a pre-built RAG tool from OCI GenAI Agent Service. Follow this link to know more about this tool:
+
+> https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/RAG-tool-create.htm
 
 #### slack_tools : 
 > Enable an Agent to write and send a slack message to an organization channel.
@@ -206,9 +217,17 @@ sample prompt : Is a $500 client lunch at steakhouse deductible?
 
 #### speech_instruct_tools : 
 > Convert Speech to Text tool
+>
+> This is a custom function tool and the source code is available here 
+>
+> src/tools/speech_instruct_tools.py
 
 #### vision_instruct_tools : 
 > Convert Image to Text tool
+>
+> This is a custom function tool and the source code is available here 
+>
+> src/tools/vision_instruct_tools.py
 
 
 
