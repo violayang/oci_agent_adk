@@ -20,7 +20,7 @@
 
 * The [Usage Instructions](#usage-instructions) assume that Oracle Linux is used
 * Output is printed to the CLI console
-* Query is hardcoded in [main.py](./main.py)
+* Query is hardcoded in [main.py](main.py)
 * Environment variables are sourced from file: `config/.env`
 * OCI Config file variables are sourced from file: `~/.oci/config`
 * Document content outside of the provided examples may not be responded to effectively due to limitations of a single API call to Embedding Model, Vector DB, or LLM. Multiple API calls may have to be used to respond to more content.
@@ -32,7 +32,7 @@
     git clone https://github.com/aojah1/adk_projects.git
     cd adk_projects
     ```
-2. Ensure that `Python3.13` is installed on your machine. For `Python3.13` installation details, see repo level [readme.md](../../readme.md).
+2. Ensure that `Python3.13` is installed on your machine. For `Python3.13` installation details, see repo level [readme.md](../../../readme.md).
 3. Ensure that your `Python3.13` installation includes a sufficient `sqlite3` version, such as `3.41.2`. You can check `sqlite3` version using the following command:
     ```
     /usr/local/bin/python3.13 -c "import sqlite3; print(sqlite3.sqlite_version)"
@@ -65,6 +65,6 @@
     ```
 9. Run the Custom RAG module:
     ```
-    python3.13 src/custom_rag/main.py
+    python3.13 src/tools/custom_rag/main.py
     ```
 10. Observe the response returned from the Custom RAG module, and note whether the returned information is accurate to the source content in the PDF document.
