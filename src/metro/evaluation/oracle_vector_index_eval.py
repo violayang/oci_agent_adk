@@ -16,7 +16,7 @@ from src.llm.oci_embedding_model import initialize_embedding_model
 # 1) bootstrap paths + env + llm
 # ────────────────────────────────────────────────────────
 THIS_DIR     = Path(__file__).resolve()
-PROJECT_ROOT = THIS_DIR.parent.parent.parent
+PROJECT_ROOT = THIS_DIR.parent.parent.parent.parent
 print(PROJECT_ROOT)
 load_dotenv(PROJECT_ROOT / "config/.env")  # expects OCI_ vars in .env
 
