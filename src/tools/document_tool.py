@@ -36,9 +36,6 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import RetrievalQA
 from langchain_community.document_loaders import TextLoader
 from src.llm.oci_embedding_model import initialize_embedding_model
-from pypdf import PdfReader
-import oci
-# from PyPDFLoader import PyPDFLoader
 from io import BytesIO
 import tempfile
 from langchain_community.document_loaders import PyPDFLoader
