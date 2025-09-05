@@ -37,6 +37,8 @@ class Fusion_SCM_Order_Toolkit(Toolkit):
             if isinstance(payload, dict):
                 payload = json.dumps(payload)
 
+
+            print(payload)
             response = requests.post(
                 API_URL,
                 auth=(API_USER, API_PASS),
@@ -66,8 +68,8 @@ class Fusion_SCM_Order_Toolkit(Toolkit):
             curl -u username:password "https://servername/fscmRestApi/resources/version/salesOrdersForOrderHub"
             """
 
-            #query_string = f"finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber={orderid},SourceTransactionSystem=GPR"
-            resource = f"/{orderid}"
+            query_string = f"finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber={orderid},SourceTransactionSystem=OPS"
+            resource = f"?{query_string}"
             print(resource)
             response = requests.get(
                 API_URL + resource,
@@ -82,75 +84,69 @@ class Fusion_SCM_Order_Toolkit(Toolkit):
 
         except requests.exceptions.RequestException as e:
             return f"API call failed: {str(e)}"
+        
+    # @tool
+    # def get_order_number(self, order_key: str) -> str:
+    #     """
+    #     You are a tools to fetch one sales order using order_key by invoking an External REST API.
+    #     :param query:
+    #     :return:
+    #     """
+    #     try:
+
+    #         """
+    #         curl -u username:password "https://servername/fscmRestApi/resources/version/salesOrdersForOrderHub"
+    #         """
+    #         response = requests.get(
+    #             API_URL + "?q=OrderNumber=" + order_key,
+    #             auth=(API_USER, API_PASS),
+    #         )
+
+    #         print("Status Code:", response.status_code)
+    #         print("Response Text:", response.text)
+
+    #         response.raise_for_status()
+    #         return f"Response: {json.dumps(response.json(), indent=4)}"
+
+    #     except requests.exceptions.RequestException as e:
+    #         return f"API call failed: {str(e)}"
 
 def test_case_create_sales_order():
     payload = {
-        "SourceTransactionNumber": "R13_Sample_Order_ATOModel_01",
-        "SourceTransactionSystem": "GPR",
-        "SourceTransactionId": "R13_Sample_Order_ATOModel_01",
+        "SourceTransactionNumber": "97414",
+        "SourceTransactionSystem": "OPS",
+        "SourceTransactionId": "97414",
         "TransactionalCurrencyCode": "USD",
-        "BusinessUnitId": 204,
-        "BuyingPartyNumber": "1006",
-        "TransactionTypeCode": "STD",
+        "BusinessUnitId": 300000046987012,
+        "BuyingPartyNumber": "10060",
+        #"TransactionTypeCode": "STD",
         "RequestedShipDate": "2018-09-19T19:51:48+00:00",
         "SubmittedFlag": 'true',
         "FreezePriceFlag": 'false',
         "FreezeShippingChargeFlag": 'false',
         "FreezeTaxFlag": 'false',
-        "RequestingBusinessUnitId": 204,
-        "billToCustomer": [{
-            "CustomerAccountId": 1006,
-            "SiteUseId": 1025
-        }],
-        "shipToCustomer": [{
-            "PartyId": 1006,
-            "SiteId": 1036
-        }],
+        "RequestingBusinessUnitId": 300000046987012,
+        # "billToCustomer": [{
+        #     "CustomerAccountId": 10060,
+        #     "SiteUseId": 300000047368662
+        # }],
+        # "shipToCustomer": [{
+        #     "PartyId": 10060,
+        #     "SiteId": 300000047368662
+        # }],
         "lines": [{
             "SourceTransactionLineId": "1",
             "SourceTransactionLineNumber": "1",
             "SourceScheduleNumber": "1",
             "SourceTransactionScheduleId": "1",
-            "OrderedUOMCode": "Ea",
-            "OrderedQuantity": 1,
-            "ProductNumber": "STOVE_ATO_MODEL",
+            "OrderedUOMCode": "zzu",
+            "OrderedQuantity": 10,
+            "ProductNumber": "AS7751100",
             "FOBPoint": "Destination",
             "FreightTerms": "Add freight",
             "PaymentTerms": "30 Net",
-            "ShipmentPriority": "High",
-            "RequestedFulfillmentOrganizationId": 204
-        },
-        {
-            "SourceTransactionLineId": "2",
-            "SourceTransactionLineNumber": "2",
-            "SourceScheduleNumber": "1",
-            "SourceTransactionScheduleId": "1",
-            "OrderedUOMCode": "Ea",
-            "OrderedQuantity": 1,
-            "ProductNumber": "GAS_FUEL",
-            "FOBPoint": "Destination",
-            "FreightTerms": "Add freight",
-            "PaymentTerms": "30 Net",
-            "ShipmentPriority": "High",
-            "RequestedFulfillmentOrganizationId": 204,
-            "ParentSourceTransactionLineId": "1"
-        },
-        {
-            "SourceTransactionLineId": "3",
-            "SourceTransactionLineNumber": "3",
-            "SourceScheduleNumber": "1",
-            "SourceTransactionScheduleId": "1",
-            "OrderedUOMCode": "Ea",
-            "OrderedQuantity": 1,
-            "ProductNumber": "Burner_4_GRID",
-            "PurchasingUOMCode": "Ea",
-            "FOBPoint": "Destination",
-            "FreightTerms": "Add freight",
-            "PaymentTerms": "30 Net",
-            "ShipmentPriority": "High",
-            "FOBPointCode":"Destination",
-            "RequestedFulfillmentOrganizationId": 204,
-            "ParentSourceTransactionLineId": "1"
+            "ShipmentPriority": "High"
+            # "RequestedFulfillmentOrganizationId": 204
         }
         ]
     }
@@ -159,9 +155,18 @@ def test_case_create_sales_order():
     toolkit.create_sales_order(payload)
 
 def test_get_sales_order():
-    order_string = "GPR:R13_Sample_Order_ATOModel_01"
+    #order_string = "finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=97414,SourceTransactionSystem=OPS"
+    order_string = "97414"
+    
     toolkit = Fusion_SCM_Order_Toolkit()
     toolkit.get_sales_order(order_string)
 
-if __name__ == "__main__":
-    test_get_sales_order()
+# def test_get_order_number():
+#     order_string = "98483"
+#     toolkit = Fusion_SCM_Order_Toolkit()
+#     toolkit.get_order_number(order_string)
+
+
+# if __name__ == "__main__":
+#     #test_case_create_sales_order()
+#     #test_get_sales_order()

@@ -76,6 +76,33 @@ def get_sales_order(orderid: str) -> str:
 
     except requests.exceptions.RequestException as e:
         return f"API call failed: {str(e)}"
+    
+
+@tool
+def fetch_sales_order(order_key: str) -> str:
+    """
+    You are a tools to fetch one sales order using order_key by invoking an External REST API.
+    :param query:
+    :return:
+    """
+    try:
+
+        """
+        curl -u username:password "https://servername/fscmRestApi/resources/version/salesOrdersForOrderHub"
+        """
+        response = requests.get(
+            API_URL + "?" + order_key,
+            auth=(API_USER, API_PASS),
+        )
+
+        print("Status Code:", response.status_code)
+        print("Response Text:", response.text)
+
+        response.raise_for_status()
+        return f"Response: {json.dumps(response.json(), indent=4)}"
+
+    except requests.exceptions.RequestException as e:
+        return f"API call failed: {str(e)}"
 
 def test_case_create_sales_order():
     payload = {
@@ -156,5 +183,10 @@ def test_get_sales_order():
     order_string = "finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=404087,SourceTransactionSystem=GPR"
     get_sales_order(order_string)
 
+def test_fetch_sales_order():
+    order_string = "q=OrderNumber=97412"
+    fetch_sales_order(order_string)
+
 if __name__ == "__main__":
-    test_get_sales_order()
+    test_fetch_sales_order()
+    #test_get_sales_order()
