@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict
 import shutil
 #from src.agents.agent_image2text import agent_flow
-from src.agents.create_sales_order import agent_flow_order
+from src.agents.create_sales_order import agent_create_sales_order
 import traceback, json, os
 
 app = FastAPI()
@@ -23,13 +23,24 @@ async def ask_agent_from_image(
 
         # Build the prompt
         input_prompt = f"{str(temp_path)}   \n{question}"
-        agent_image2text = agent_flow_order()
-        response = await agent_image2text.run_async(input_prompt)
+        agent_image2text = agent_create_sales_order()
+        response = await agent_image2text.run_async(input_prompt, max_steps=2)
 
         final_answer = response.data["message"]["content"]["text"]
         print(final_answer)
 
         return JSONResponse(content={"final_answer": final_answer})
+    
+        # image_path = f"{PROJECT_ROOT}/images/orderhub_handwritten.jpg"
+        # question = """
+        # Get all information about the order.
+        # """
+        # # Read Order
+        # input_prompt = image_path + "   " + question
+        # response = agent_order.run(input_prompt, max_steps=4)
+        # final_message = response.data["message"]["content"]["text"]
+        # print(final_message)
+
     except Exception as e:
         # Print the full stack trace to stdout/logs
         traceback.print_exc()
@@ -56,7 +67,7 @@ async def create_sales_order(payload: Dict = Body(...)):
         # Construct a human-readable prompt with embedded JSON
         input_prompt = f"Create a sales order using a properly structured JSON payload:\n{payload_json}"
 
-        agent_order = agent_flow_order()
+        agent_order = agent_create_sales_order()
         response = await agent_order.run_async(input_prompt)
 
         final_answer = response.data["message"]["content"]["text"]
@@ -83,7 +94,7 @@ async def query_sales_order(input_prompt: str):
     /orders/query?finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=404087,SourceTransactionSystem=GPR
     """
     try:
-        agent_get = agent_flow_order()
+        agent_get = agent_create_sales_order()
         response = await agent_get.run_async(input_prompt)
 
         final_answer = response.data["message"]["content"]["text"]
