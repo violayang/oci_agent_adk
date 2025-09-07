@@ -24,7 +24,7 @@ async def ask_agent_from_image(
         # Build the prompt
         input_prompt = f"{str(temp_path)}   \n{question}"
         agent_image2text = agent_create_sales_order()
-        response = await agent_image2text.run_async(input_prompt, max_steps=2)
+        response = await agent_image2text.run_async(input_prompt, max_steps=5)
 
         final_answer = response.data["message"]["content"]["text"]
         print(final_answer)
@@ -101,6 +101,55 @@ async def query_sales_order(input_prompt: str):
         print(final_answer)
 
         return JSONResponse(content={"final_answer": final_answer})
+    except Exception as e:
+        # Print the full stack trace to stdout/logs
+        traceback.print_exc()
+
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": str(e),
+                "traceback": traceback.format_exc()
+            }
+        )
+
+from pydantic import BaseModel, Field
+
+class SalesEmailRequest(BaseModel):
+    saas_transaction_id: str | int = Field(..., description="Sales order id")
+    final_message: str = Field(..., description="Email body content")
+
+class SalesEmailResponse(BaseModel):
+    email_string: str
+    final_message_email: str
+
+@app.post("/orders/email")
+async def email_sales_order(payload: SalesEmailRequest):
+    """
+    Email the status of the Sales Order to a CSR
+    """
+    try:
+        agent_order_email = agent_create_sales_order()
+        
+
+        saas_transaction_id = payload.saas_transaction_id
+        final_message = payload.final_message
+
+        input_prompt = (
+            f"Send an email to ops@example.com: "
+            f"subject: Sales Order Status for orderid : {saas_transaction_id}, "
+            f"body: {final_message}"
+        )
+
+        #input_prompt = f"Send an email to ops@example.com: subject: Sales Order Created for orderid : {saas_transaction_id}, body: {final_message}"
+    
+        response = await agent_order_email.run_async(input_prompt, max_steps=3)
+
+        final_answer = response.data["message"]["content"]["text"]
+        print(final_answer)
+
+        return JSONResponse(content={"final_answer": final_answer})
+        
     except Exception as e:
         # Print the full stack trace to stdout/logs
         traceback.print_exc()

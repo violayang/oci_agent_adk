@@ -2,8 +2,8 @@
 import json, requests, streamlit as st
 
 st.set_page_config(page_title="Agent Orchestrator (Streaming)", page_icon="🤖", layout="wide")
-st.title("🤖 Agent Orchestrator")
-st.caption("Master agent executes tools in serial with streaming logs and a LangGraph-style diagram. (No Python graphviz dependency required)")
+st.title("🤖 ERP - Sales Order Automation Agent")
+st.caption("Master agent executes sub agents in serial with streaming logs and a LangGraph-style diagram. (No Python graphviz dependency required)")
 
 # ---------------- Sidebar ----------------
 with st.sidebar:
@@ -13,7 +13,7 @@ with st.sidebar:
     timeout = st.number_input("HTTP Timeout (s)", value=60, min_value=1, max_value=600)
     st.markdown("---")
     st.subheader("Run server")
-    st.code("streamlit run app.py --server.address 0.0.0.0 --server.port 8501")
+    st.code("streamlit run app.py --server.address 0.0.0.0 --server.port 8505")
 
 session = requests.Session()
 
@@ -31,48 +31,92 @@ st.subheader("🛠️ Tools")
 st.caption("Wired to your endpoints: /query/image, /orders/create, /orders/query")
 
 # Tool inputs
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 with col1:
-    st.markdown("**1) text_2_image — POST /query/image**")
+    st.markdown("**1) Text_2_Image — Agent **")
     q_question = st.text_input("question", value="Get all information about the order", key="q1")
     q_image = st.file_uploader("image", type=["png","jpg","jpeg"], key="f1")
 
 with col2:
-    st.markdown("**2) Create_Sales_Order — POST /orders/create**")
+    st.markdown("**2) Create_Sales_Order — Agent **")
     default_body = {
-      "SourceTransactionNumber": "R210_Sample_Order_ATOModel_214",
-      "SourceTransactionSystem": "OPS",
-      "SourceTransactionId": "R210_Sample_Order_ATOModel_214",
-      "TransactionalCurrencyCode": "USD",
-      "BusinessUnitId": 300000046987012,
-      "BuyingPartyNumber": "10060",
-      "RequestedShipDate": "2018-09-19T19:51:48+00:00",
-      "SubmittedFlag": True,
-      "FreezePriceFlag": False,
-      "FreezeShippingChargeFlag": False,
-      "FreezeTaxFlag": False,
-      "RequestingBusinessUnitId": 300000046987012,
-      "lines": [
+        "SourceTransactionNumber": "R210_Sample_Order_ATOModel_227",
+        "SourceTransactionSystem": "OPS",
+        "SourceTransactionId": "R210_Sample_Order_ATOModel_227",
+        "TransactionalCurrencyCode": "USD",
+        "BusinessUnitId": 300000046987012,
+        "BuyingPartyNumber": "10060",
+        #"TransactionTypeCode": "STD",
+        "RequestedShipDate": "2018-09-19T19:51:48+00:00",
+        "SubmittedFlag": 'true',
+        "FreezePriceFlag": 'false',
+        "FreezeShippingChargeFlag": 'false',
+        "FreezeTaxFlag": 'false',
+        "RequestingBusinessUnitId": 300000046987012,
+        # "billToCustomer": [{
+        #     "CustomerAccountId": 10060,
+        #     "SiteUseId": 300000047368662
+        # }],
+        # "shipToCustomer": [{
+        #     "PartyId": 10060,
+        #     "SiteId": 300000047368662
+        # }],
+        "lines": [{
+            "SourceTransactionLineId": "1",
+            "SourceTransactionLineNumber": "1",
+            "SourceScheduleNumber": "1",
+            "SourceTransactionScheduleId": "1",
+            "OrderedUOMCode": "zzu",
+            "OrderedQuantity": 10,
+            "ProductNumber": "AS6647431",
+            "FOBPoint": "Destination",
+            "FreightTerms": "Add freight",
+            "PaymentTerms": "30 Net",
+            "ShipmentPriority": "High"
+            # "RequestedFulfillmentOrganizationId": 204
+        },
         {
-          "SourceTransactionLineId": "1",
-          "SourceTransactionLineNumber": "1",
-          "SourceScheduleNumber": "1",
-          "SourceTransactionScheduleId": "1",
-          "OrderedUOMCode": "zzu",
-          "OrderedQuantity": 1,
-          "ProductNumber": "AS6647431",
-          "FOBPoint": "Destination",
-          "FreightTerms": "Add freight",
-          "PaymentTerms": "30 Net",
-          "ShipmentPriority": "High"
+            "SourceTransactionLineId": "2",
+            "SourceTransactionLineNumber": "2",
+            "SourceScheduleNumber": "1",
+            "SourceTransactionScheduleId": "1",
+            "OrderedUOMCode": "zzu",
+            "OrderedQuantity": 5,
+            "ProductNumber": "AS6647432",
+            "FOBPoint": "Destination",
+            "FreightTerms": "Add freight",
+            "PaymentTerms": "30 Net",
+            "ShipmentPriority": "High"
+            #"ParentSourceTransactionLineId": "1"
+            # "RequestedFulfillmentOrganizationId": 204
+        },
+        {
+            "SourceTransactionLineId": "3",
+            "SourceTransactionLineNumber": "3",
+            "SourceScheduleNumber": "1",
+            "SourceTransactionScheduleId": "1",
+            "OrderedUOMCode": "zzu",
+            "OrderedQuantity": 15,
+            "ProductNumber": "AS6647433",
+            "FOBPoint": "Destination",
+            "FreightTerms": "Add freight",
+            "PaymentTerms": "30 Net",
+            "ShipmentPriority": "High"
+            #"ParentSourceTransactionLineId": "1"
+            # "RequestedFulfillmentOrganizationId": 204
         }
-      ]
+        ]
     }
     q_body_raw = st.text_area("Order JSON", value=json.dumps(default_body, indent=2), height=260, key="body")
 
 with col3:
-    st.markdown("**3) Get_Sales_Order — GET /orders/query**")
-    q_order_id = st.text_input("Order ID", value="R210_Sample_Order_ATOModel_214", key="oid")
+    st.markdown("**3) Get_Sales_Order — Agent **")
+    q_order_id = st.text_input("Order ID", value="R210_Sample_Order_ATOModel_227", key="oid")
+
+with col4:
+    st.markdown("**4) Sales_Order_Email — Agent **")
+    q_order_id = st.text_input("Order ID", value="R210_Sample_Order_ATOModel_227", key="oid_email")
+
 
 st.markdown("---")
 
@@ -95,27 +139,29 @@ def render_graph(status_map):
     dot.append('digraph G {')
     dot.append('rankdir="LR";')
     dot.append('node [fontname="Helvetica"];')
-    dot.append('A [label="Master Agent", shape="circle", style="filled", fillcolor="#e0e7ff"];')
+    dot.append('A [label="Master Agent \n OrderX Hub", shape="circle", style="filled", fillcolor="#e0e7ff"];')
     def add_tool(code, label):
         stt = status_map.get(code, STATUS_PENDING)
         dot.append(f'{code} [label="{label}", shape="box", style="filled,rounded", fillcolor="{colors[stt]}"];')
-    add_tool("T1", "text_2_image\nPOST /query/image")
-    add_tool("T2", "Create_Sales_Order\nPOST /orders/create")
-    add_tool("T3", "Get_Sales_Order\nGET /orders/query")
+    add_tool("T1", "Text_2_Image\n Agent")
+    add_tool("T2", "Create_Sales_Order\n Agent")
+    add_tool("T3", "Get_Sales_Order\n Agent")
+    add_tool("T4", "Sales_Order_Email\n Agent")
     dot.append("A -> T1;")
     dot.append("T1 -> T2;")
     dot.append("T2 -> T3;")
+    dot.append("T3 -> T4;")
     dot.append("}")
     dot_src = "\n".join(dot)
     diagram_placeholder.graphviz_chart(dot_src)
 
-status_map = {"T1": STATUS_PENDING, "T2": STATUS_PENDING, "T3": STATUS_PENDING}
+status_map = {"T1": STATUS_PENDING, "T2": STATUS_PENDING, "T3": STATUS_PENDING, "T4": STATUS_PENDING}
 render_graph(status_map)
 
 # ---------------- Streaming Logs + Execute ----------------
 run_col, log_col = st.columns([1,2])
 with run_col:
-    run = st.button("🚀 Execute (1 → 2 → 3)")
+    run = st.button("🚀 Execute Master Agent - OrderX Hub")
 
 with log_col:
     st.markdown("**Live Logs**")
@@ -142,7 +188,7 @@ if run:
     # Step 1
     status_map["T1"] = STATUS_RUNNING
     render_graph(status_map)
-    stream_log("Step 1/3: text_2_image — uploading image + question…")
+    stream_log("Step 1/4: Text_2_Image — uploading image + question…")
     try:
         files = None
         if q_image is not None:
@@ -169,7 +215,7 @@ if run:
         # Step 2
         status_map["T2"] = STATUS_RUNNING
         render_graph(status_map)
-        stream_log("Step 2/3: Create_Sales_Order — posting order JSON…")
+        stream_log("Step 2/4: Create_Sales_Order — posting order JSON…")
         try:
             payload2 = json.loads(q_body_raw)
             r2 = POST("/orders/create", json=payload2, headers={"Content-Type":"application/json","accept":"application/json"})
@@ -197,7 +243,7 @@ if run:
                 derived_id = p2.get("OrderNumber") or p2.get("id") or p2.get("SourceTransactionNumber") or derived_id
         except Exception:
             pass
-        stream_log(f"Step 3/3: Get_Sales_Order — querying order: {derived_id}")
+        stream_log(f"Step 3/4: Get_Sales_Order — querying order: {derived_id}")
         try:
             prompt = f"get sales order for order id : {derived_id}"
             r3 = GET("/orders/query", params={"input_prompt": prompt}, headers={"accept":"application/json"})
@@ -214,5 +260,33 @@ if run:
             status_map["T3"] = STATUS_FAIL
             render_graph(status_map)
             stream_log(f"Step 3 error: {e}")
+    
+    if status_map["T3"] == STATUS_SUCCESS:
+        # Step 2
+        status_map["T4"] = STATUS_RUNNING
+        render_graph(status_map)
+        stream_log("Step 4/4: Sales_Order_Email — posting order JSON…")
+        try:
+            #payload4 = json.loads(p3)
+            # Build the *exact* payload the FastAPI endpoint requires
+            payload4 = {
+                "saas_transaction_id": derived_id,     # int or str is fine
+                "final_message": str(p3),            # ensure string
+            }
+
+            r4 = POST("/orders/email", json=payload4, headers={"Content-Type":"application/json","accept":"application/json"})
+            try:
+                p4 = r4.json() if r4.headers.get("content-type","").startswith("application/json") else r4.text
+            except Exception:
+                p4 = r4.text
+            ok4 = r4.ok
+            stream_log(f"Step 4 → HTTP {r4.status_code}")
+            status_map["T4"] = STATUS_SUCCESS if ok4 else STATUS_FAIL
+            render_graph(status_map)
+            show_payload("/orders/email response", p4)
+        except Exception as e:
+            status_map["T4"] = STATUS_FAIL
+            render_graph(status_map)
+            stream_log(f"Step 4 error: {e}")
 
     stream_log("Done.")
