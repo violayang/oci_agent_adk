@@ -15,7 +15,7 @@ with st.sidebar:
     st.subheader("Run server")
     st.code("streamlit run app.py --server.address 0.0.0.0 --server.port 8505")
     st.markdown("---")
-    transaction_number = st.text_input("Transaction Number", value="R230_Sample_Order_ATOModel_232")
+    transaction_number = st.text_input("Transaction Number", value="R250_Sample_Order_ATOModel_01")
 
 session = requests.Session()
 

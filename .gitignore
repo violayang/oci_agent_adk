@@ -2,7 +2,9 @@
 requirements.txt
 .env
 /config/.env
+streamlit.log
 src/examples/__pycache__
+src/toolkit/fusion_scm_order_toolkit_template.py
 __pycache__/
 *.pyc
 data/chroma.sqlite3
