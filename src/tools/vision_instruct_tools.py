@@ -2,8 +2,10 @@
 from typing import Dict, Any
 from oci.addons.adk import Toolkit, tool
 import base64
-from langchain_core.messages import HumanMessage
+import json
+from langchain_core.messages import HumanMessage, SystemMessage
 from src.llm.oci_genai_vision import initialize_vision_llm
+from src.data.sales_order import Transaction as data_structure
 
 # Load and encode your image (local file)
 def encode_image_as_base64(image_path):
@@ -24,6 +26,8 @@ def image_to_text(image_path:str, question:str) -> str:
     # Encode image
     image_base64 = encode_image_as_base64(image_path)
 
+    data_schema_str = json.dumps(data_structure.model_json_schema(), indent=2)
+
     # Construct message with image and text
     messages = [
         HumanMessage(
@@ -31,7 +35,12 @@ def image_to_text(image_path:str, question:str) -> str:
                 {"type": "text", "text": f"{question}"},
                 {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_base64}"}}
             ]
-        )
+        ),
+        SystemMessage(
+            "You are a helpful assistant. Use the schema below to extract structured JSON from the user's request.\n"
+            "Respond with valid JSON inside triple backticks like ```json ... ```.\n\n"
+            "Schema:\n```json\n{data_schema_str}\n```"
+            )
     ]
 
     llm = initialize_vision_llm()
@@ -47,7 +56,12 @@ def test_image_to_text():
     PROJECT_ROOT = THIS_DIR.parent.parent.parent
 
     image_path = f"{PROJECT_ROOT}/images/orderhub_handwritten.jpg"
-    question = "What is the ship to address"
+    question = ("""Get all information about the order such as - 
+BillToCustomer : {}
+ShipToCustomer: {}}
+- Item: {}, Quantity: {}, Requested Date: {}
+"""
+                )
     print(image_path)
     response = image_to_text(image_path, question)
     return response

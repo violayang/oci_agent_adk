@@ -1,76 +1,122 @@
+"""
+getinsights.py
+Author: Anup Ojah
+Date: 2025-07-18
+=================================
+==Get Business Insight Assistant==
+==================================
+This module initializes and runs an OCI GenAI Agent with Redis and Tavily MCP tool integrations.
+It supports enterprise finance-related prompts (AP, GL, AR) and enables real-time web search via Tavily.
+Workflow Overview:
+1. Load config and credentials from .env
+2. Start MCP clients for Redis and Tavily
+3. Register tools with the agent
+4. Run the agent with user input and print response
+"""
+
 import asyncio, os
 
 from mcp.client.session_group import StreamableHttpParameters
 from oci.addons.adk import Agent, AgentClient
 from oci.addons.adk.mcp import MCPClientStreamableHttp
-from pathlib import Path
-from dotenv import load_dotenv
-from src.tools.custom_function_tools import AccountToolkit
+
 from oci.addons.adk.tool.prebuilt import AgenticRagTool
+from mcp.client.stdio import StdioServerParameters
+from oci.addons.adk.mcp import MCPClientStdio
+from anyio import get_cancelled_exc_class
+from src.prompt_engineering.topics.ask_data import prompt_Agent_Auditor
+from src.llm.oci_genai_agent import initialize_oci_genai_agent_service
+from src.common.config import *
 
-# ────────────────────────────────────────────────────────
-# 1) bootstrap paths + env + llm
-# ────────────────────────────────────────────────────────
-THIS_DIR     = Path(__file__).resolve()
-PROJECT_ROOT = THIS_DIR.parent.parent.parent
+async def agent_flow(input_prompt: str, session_id:str):
 
-load_dotenv(PROJECT_ROOT / "config/.env")  # expects OCI_ vars in .env
-
-# Set up the OCI GenAI Agents endpoint configuration
-AGENT_EP_ID = os.getenv("AGENT_EP_ID")
-AGENT_REGION = os.getenv("AGENT_REGION")
-
-connections = StreamableHttpParameters(
-        url="https://cf95-104-48-173-98.ngrok-free.app/mcp",
+    # MCP REDIS Server endpoint configs
+    redis_server_params = StreamableHttpParameters(
+        url=REDIS_MCP_SERVER,
     )
 
-client = MCPClientStreamableHttp(connections)
-print(client)
-async def redis_node(input_text: str):
-    async with client.session("redis") as session:
-        print(session)
+    # Use npx
+    tavily_server_params = StdioServerParameters(
+        command="npx",
+        args=["-y", "mcp-remote", TAVILY_MCP_SERVER])
 
-async def main():
+    # time_server_params = StdioServerParameters(
+    #     command="uvx",
+    #     args=["mcp-server-time", "--local-timezone=America/Los_Angeles"],
+    # )
 
-    params = StreamableHttpParameters(
-        url="https://cf95-104-48-173-98.ngrok-free.app/mcp",
-    )
+    # Start both MCP clients manually
+    # time_mcp_client = MCPClientStdio(params=time_server_params)
+    redis_mcp_client = MCPClientStreamableHttp(params=redis_server_params)
+    tavily_mcp_client = MCPClientStdio(params=tavily_server_params)
 
-    async with MCPClientStreamableHttp(
-        params=params,
-        name="redis mcp server",
-    ) as mcp_client:
+    # await time_mcp_client.__aenter__()
+    await redis_mcp_client.__aenter__()
+    await tavily_mcp_client.__aenter__()
 
+
+    try:
+        # Setup agent client
         client = AgentClient(
             auth_type="api_key",
-            profile="DEFAULT",
+            config=OCI_CONFIG_FILE,
+            profile=OCI_PROFILE,
             region=AGENT_REGION
         )
 
         agent = Agent(
             client=client,
             agent_endpoint_id=AGENT_EP_ID,
-            instructions="You are a Redis-savvy assistant.Only allow read operation with the best tool you have",
-            tools=[await mcp_client.as_toolkit()],
+            instructions= prompt_Agent_Auditor,
+            tools=[
+                # await time_mcp_client.as_toolkit(),
+                await redis_mcp_client.as_toolkit(),
+                await tavily_mcp_client.as_toolkit(),
+            ],
         )
 
         agent.setup()
 
-        # # Should trigger the `add` tool
-        # input_message = "which Invoice I should pay first based criteria such as highest amount due and highest past due date for 'session:e5f6a932-6123-4a04-98e9-6b829904d27f'"
-        # print(f"Running: {input_message}")
-        # response = await agent.run_async(input_message)
-        # response.pretty_print()
+        print(f"Running: {input_prompt}")
+        try:
+            if(session_id == ""):
+                response = await agent.run_async(input_prompt, max_steps=10)
+            else:
+                response = await agent.run_async(input_prompt, session_id=session_id ,max_steps=10) # working on a bug with session_id
 
-async def test_case():
-    agent = await main()
-    # Should trigger the `add` tool
-    input_message = "which Invoice I should pay first based criteria such as highest amount due and highest past due date for 'session:e5f6a932-6123-4a04-98e9-6b829904d27f'"
-    print(f"Running: {input_message}")
-    response = await agent.run_async(input_message)
-    response.pretty_print()
+            session_id = response.session_id  # <-- global variable is now updated
+            print(f"Session ID: {session_id}")
+            response.pretty_print()
+        except get_cancelled_exc_class():
+            print("🟡 Agent run cancelled (tool timeout or interrupt).")
+
+    finally:
+        # Clean shutdown with full cancel error suppression
+        # try:
+        #     await time_mcp_client.__aexit__(None, None, None)
+        # except get_cancelled_exc_class():
+        #     print("⚠️ MCPClientStdio cancelled during shutdown.")
+        try:
+            await tavily_mcp_client.__aexit__(None, None, None)
+        except get_cancelled_exc_class():
+            print("⚠️ MCPClientStdio cancelled during tavily_mcp_client shutdown.")
+
+        try:
+            await redis_mcp_client.__aexit__(None, None, None)
+        except get_cancelled_exc_class():
+            print("⚠️ MCPClientStreamableHttp cancelled during redis_mcp_client shutdown.")
+
+    return response
+
 
 if __name__ == "__main__":
-    input_message = "which Invoice I should pay first based criteria such as highest amount due and highest past due date for 'session:e5f6a932-6123-4a04-98e9-6b829904d27f'"
+    generative_ai_agent_runtime_client, session_id = initialize_oci_genai_agent_service()
+    print(f"<UNK> Generative AI Agent {session_id}")
 
-    asyncio.run(test_case(input_message))
+    # Test input
+    input_message = (
+        "Search the internet to find out the best way to pay an invoice. "
+        "Using the best practices from above, answer - Which invoice should I pay first based on criteria such as highest amount due and highest past due date for 'session:e5f6a932-6123-4a04-98e9-6b829904d27f'"
+    )
+    asyncio.run(agent_flow(input_message, session_id)) # ✅ safe now with proper async context use
+

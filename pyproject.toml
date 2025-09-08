@@ -1,0 +1,35 @@
+[project]
+name = "adk-landing-zone"
+version = "0.1.0"
+description = "Python Package to deploy ADK Landing Zone"
+authors = [
+    { name = "Anup Ojah", email = "anup.ojah@oracle.com" }
+]
+license = "MIT"  # Or your preferred license (e.g., "Apache-2.0")
+readme = "README.md"  # Assumes you have a README.md file; adjust if needed
+requires-python = ">=3.8"  # Specify the minimum Python version your package supports
+keywords = ["adk", "landing-zone", "deployment"]  # Optional: Helps with searchability
+classifiers = [  # Optional: PyPI trove classifiers for categorization (removed deprecated license one)
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [  # Runtime dependencies (migrated from requirements.txt examples)
+    "requests>=2.25.0",  # Example: Add your actual dependencies here
+    "numpy>=1.21.0",     # Example
+    # Add more from your requirements.txt, e.g., "pandas==1.4.0"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+# Optional: Include additional files like requirements.txt in the package distribution
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"adk_landing_zone" = ["requirements.txt"]  # Bundles requirements.txt inside your package directory
+
+# Optional: If your package has command-line entry points (e.g., a CLI tool)
+#[project.scripts]
+#adk-deploy = "adk_landing_zone.main:deploy_function"  # Example: Points to a function in your code

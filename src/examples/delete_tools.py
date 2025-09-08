@@ -13,6 +13,8 @@ PROJECT_ROOT = THIS_DIR.parent.parent.parent
 load_dotenv(PROJECT_ROOT / "config/.env")  # expects OCI_ vars in .env
 
 # Set up the OCI GenAI Agents endpoint configuration
+OCI_CONFIG_FILE = os.getenv("OCI_CONFIG_FILE")
+OCI_PROFILE = os.getenv("OCI_PROFILE")
 AGENT_ID = os.getenv("AGENT_ID")
 AGENT_REGION = os.getenv("AGENT_REGION")
 AGENT_COMPARTMENT_ID = os.getenv("AGENT_COMPARTMENT_ID")
@@ -22,7 +24,8 @@ def delete_tools():
     # Create a client with your authentication details
     client = AgentClient(
         auth_type="api_key",
-        profile="DEFAULT",
+        config=OCI_CONFIG_FILE,
+        profile=OCI_PROFILE,
         region=AGENT_REGION
     )
 

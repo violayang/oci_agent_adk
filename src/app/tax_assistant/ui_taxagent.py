@@ -8,9 +8,15 @@ st.set_page_config(page_title="OCI RAG Tax Assistant", layout="wide")
 st.title("🧾 Tax Assistant with OCI GenAI")
 st.markdown("Ask tax-related questions using Oracle RAG Agent Service.")
 
-user_input = st.text_area("Enter your query:", height=150)
+# Initialize session_id once
+if "session_id" not in st.session_state:
+    st.session_state.session_id = ""
 
-agent = agent_flow()
+# Initialize agent once
+if "agent" not in st.session_state:
+    st.session_state.agent = agent_flow()
+
+user_input = st.text_area("Enter your query:", height=150)
 
 # Utility to safely run async code in Streamlit
 def run_async(coro):
@@ -27,7 +33,20 @@ if st.button("Ask"):
     if user_input.strip():
         try:
             with st.spinner("Contacting Oracle Tax Agent..."):
-                response = run_async(agent.run_async(user_input))
+                if(st.session_state.session_id == ""):
+                    response = run_async(
+                        st.session_state.agent.run_async(
+                            user_input
+                        )
+                    )
+                else:
+                    response = run_async(
+                        st.session_state.agent.run_async(
+                            user_input, session_id=st.session_state.session_id
+                        )
+                    )
+                # Persist session_id
+                st.session_state.session_id = response.session_id
 
                 st.success("Response received:")
                 final_answer = response.data["message"]["content"]["text"]

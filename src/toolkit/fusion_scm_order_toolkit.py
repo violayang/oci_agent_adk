@@ -37,6 +37,8 @@ class Fusion_SCM_Order_Toolkit(Toolkit):
             if isinstance(payload, dict):
                 payload = json.dumps(payload)
 
+
+            print(payload)
             response = requests.post(
                 API_URL,
                 auth=(API_USER, API_PASS),
@@ -65,8 +67,12 @@ class Fusion_SCM_Order_Toolkit(Toolkit):
             """
             curl -u username:password "https://servername/fscmRestApi/resources/version/salesOrdersForOrderHub"
             """
+
+            query_string = f"finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber={orderid},SourceTransactionSystem=OPS"
+            resource = f"?{query_string}"
+            print(resource)
             response = requests.get(
-                API_URL + "?" + orderid,
+                API_URL + resource,
                 auth=(API_USER, API_PASS),
             )
 
@@ -78,86 +84,108 @@ class Fusion_SCM_Order_Toolkit(Toolkit):
 
         except requests.exceptions.RequestException as e:
             return f"API call failed: {str(e)}"
+        
+    # @tool
+    # def get_order_number(self, order_key: str) -> str:
+    #     """
+    #     You are a tools to fetch one sales order using order_key by invoking an External REST API.
+    #     :param query:
+    #     :return:
+    #     """
+    #     try:
+
+    #         """
+    #         curl -u username:password "https://servername/fscmRestApi/resources/version/salesOrdersForOrderHub"
+    #         """
+    #         response = requests.get(
+    #             API_URL + "?q=OrderNumber=" + order_key,
+    #             auth=(API_USER, API_PASS),
+    #         )
+
+    #         print("Status Code:", response.status_code)
+    #         print("Response Text:", response.text)
+
+    #         response.raise_for_status()
+    #         return f"Response: {json.dumps(response.json(), indent=4)}"
+
+    #     except requests.exceptions.RequestException as e:
+    #         return f"API call failed: {str(e)}"
 
 def test_case_create_sales_order():
     payload = {
-        "SourceTransactionNumber": "R13_Sample_Order_ATOModel_01",
-        "SourceTransactionSystem": "GPR",
-        "SourceTransactionId": "R13_Sample_Order_ATOModel_01",
-        "TransactionalCurrencyCode": "USD",
-        "BusinessUnitId": 204,
-        "BuyingPartyNumber": "1006",
-        "TransactionTypeCode": "STD",
-        "RequestedShipDate": "2018-09-19T19:51:48+00:00",
-        "SubmittedFlag": 'true',
-        "FreezePriceFlag": 'false',
-        "FreezeShippingChargeFlag": 'false',
-        "FreezeTaxFlag": 'false',
-        "RequestingBusinessUnitId": 204,
-        "billToCustomer": [{
-            "CustomerAccountId": 1006,
-            "SiteUseId": 1025
-        }],
-        "shipToCustomer": [{
-            "PartyId": 1006,
-            "SiteId": 1036
-        }],
-        "lines": [{
-            "SourceTransactionLineId": "1",
-            "SourceTransactionLineNumber": "1",
-            "SourceScheduleNumber": "1",
-            "SourceTransactionScheduleId": "1",
-            "OrderedUOMCode": "Ea",
-            "OrderedQuantity": 1,
-            "ProductNumber": "STOVE_ATO_MODEL",
-            "FOBPoint": "Destination",
-            "FreightTerms": "Add freight",
-            "PaymentTerms": "30 Net",
-            "ShipmentPriority": "High",
-            "RequestedFulfillmentOrganizationId": 204
-        },
-        {
-            "SourceTransactionLineId": "2",
-            "SourceTransactionLineNumber": "2",
-            "SourceScheduleNumber": "1",
-            "SourceTransactionScheduleId": "1",
-            "OrderedUOMCode": "Ea",
-            "OrderedQuantity": 1,
-            "ProductNumber": "GAS_FUEL",
-            "FOBPoint": "Destination",
-            "FreightTerms": "Add freight",
-            "PaymentTerms": "30 Net",
-            "ShipmentPriority": "High",
-            "RequestedFulfillmentOrganizationId": 204,
-            "ParentSourceTransactionLineId": "1"
-        },
-        {
-            "SourceTransactionLineId": "3",
-            "SourceTransactionLineNumber": "3",
-            "SourceScheduleNumber": "1",
-            "SourceTransactionScheduleId": "1",
-            "OrderedUOMCode": "Ea",
-            "OrderedQuantity": 1,
-            "ProductNumber": "Burner_4_GRID",
-            "PurchasingUOMCode": "Ea",
-            "FOBPoint": "Destination",
-            "FreightTerms": "Add freight",
-            "PaymentTerms": "30 Net",
-            "ShipmentPriority": "High",
-            "FOBPointCode":"Destination",
-            "RequestedFulfillmentOrganizationId": 204,
-            "ParentSourceTransactionLineId": "1"
-        }
-        ]
+  "SourceTransactionNumber": "R210_Sample_Order_ATOModel_227",
+  "SourceTransactionSystem": "OPS",
+  "SourceTransactionId": "R210_Sample_Order_ATOModel_227",
+  "TransactionalCurrencyCode": "USD",
+  "BusinessUnitId": 300000046987012,
+  "BuyingPartyNumber": "10060",
+  "TransactionTypeCode": "STD",
+  "RequestedShipDate": "2018-09-19T19:51:48+00:00",
+  "SubmittedFlag": "true",
+  "FreezePriceFlag": "false",
+  "FreezeShippingChargeFlag": "false",
+  "FreezeTaxFlag": "false",
+  "RequestingBusinessUnitId": 300000046987012,
+  "lines": [
+    {
+      "SourceTransactionLineId": "1",
+      "SourceTransactionLineNumber": "1",
+      "SourceScheduleNumber": "1",
+      "SourceTransactionScheduleId": "1",
+      "OrderedUOMCode": "zzu",
+      "OrderedQuantity": 10,
+      "ProductNumber": "AS6647431",
+      "FOBPoint": "Destination",
+      "FreightTerms": "Add freight",
+      "PaymentTerms": "30 Net",
+      "ShipmentPriority": "High"
+    },
+    {
+      "SourceTransactionLineId": "2",
+      "SourceTransactionLineNumber": "2",
+      "SourceScheduleNumber": "1",
+      "SourceTransactionScheduleId": "1",
+      "OrderedUOMCode": "zzu",
+      "OrderedQuantity": 5,
+      "ProductNumber": "AS6647432",
+      "FOBPoint": "Destination",
+      "FreightTerms": "Add freight",
+      "PaymentTerms": "30 Net",
+      "ShipmentPriority": "High"
+    },
+    {
+      "SourceTransactionLineId": "3",
+      "SourceTransactionLineNumber": "3",
+      "SourceScheduleNumber": "1",
+      "SourceTransactionScheduleId": "1",
+      "OrderedUOMCode": "zzu",
+      "OrderedQuantity": 15,
+      "ProductNumber": "AS6647433",
+      "FOBPoint": "Destination",
+      "FreightTerms": "Add freight",
+      "PaymentTerms": "30 Net",
+      "ShipmentPriority": "High"
     }
+  ]
+}
+
 
     toolkit = Fusion_SCM_Order_Toolkit()
     toolkit.create_sales_order(payload)
 
 def test_get_sales_order():
-    order_string = "finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=404087,SourceTransactionSystem=GPR"
+    #order_string = "finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=97414,SourceTransactionSystem=OPS"
+    order_string = "R210_Sample_Order_ATOModel_230"
+    
     toolkit = Fusion_SCM_Order_Toolkit()
     toolkit.get_sales_order(order_string)
 
+# def test_get_order_number():
+#     order_string = "98483"
+#     toolkit = Fusion_SCM_Order_Toolkit()
+#     toolkit.get_order_number(order_string)
+
+
 if __name__ == "__main__":
     test_case_create_sales_order()
+    test_get_sales_order()
