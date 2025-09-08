@@ -14,8 +14,11 @@ with st.sidebar:
     st.markdown("---")
     st.subheader("Run server")
     st.code("streamlit run app.py --server.address 0.0.0.0 --server.port 8505")
+    st.markdown("---")
+    transaction_number = st.text_input("Transaction Number", value="R230_Sample_Order_ATOModel_232")
 
 session = requests.Session()
+
 
 def _url(path: str) -> str:
     return f"{base_url}{path if path.startswith('/') else '/' + path}"
@@ -40,9 +43,9 @@ with col1:
 with col2:
     st.markdown("**2) Create_Sales_Order — Agent **")
     default_body = {
-    "SourceTransactionNumber": "R230_Sample_Order_ATOModel_230",
+    "SourceTransactionNumber": transaction_number,
     "SourceTransactionSystem": "OPS",
-    "SourceTransactionId": "R230_Sample_Order_ATOModel_230",
+    "SourceTransactionId": transaction_number,
     "TransactionalCurrencyCode": "USD",
     "BusinessUnitId": 300000046987012,
     "BuyingPartyNumber": "10060",
@@ -59,7 +62,7 @@ with col2:
         "SourceScheduleNumber": "1",
         "SourceTransactionScheduleId": "1",
         "OrderedUOMCode": "zzu",
-        "OrderedQuantity": 10,
+        "OrderedQuantity": 5,
         "ProductNumber": "AS6647431",
         "FOBPoint": "Destination",
         "FreightTerms": "Add freight",
@@ -72,7 +75,7 @@ with col2:
         "SourceScheduleNumber": "1",
         "SourceTransactionScheduleId": "1",
         "OrderedUOMCode": "zzu",
-        "OrderedQuantity": 5,
+        "OrderedQuantity": 10,
         "ProductNumber": "AS6647432",
         "FOBPoint": "Destination",
         "FreightTerms": "Add freight",
@@ -98,11 +101,11 @@ with col2:
 
 with col3:
     st.markdown("**3) Get_Sales_Order — Agent **")
-    q_order_id = st.text_input("Order ID", value="R210_Sample_Order_ATOModel_227", key="oid")
+    q_order_id = st.text_input("Order ID", value=transaction_number, key="oid")
 
 with col4:
     st.markdown("**4) Sales_Order_Email — Agent **")
-    q_order_id = st.text_input("Order ID", value="R210_Sample_Order_ATOModel_227", key="oid_email")
+    q_order_id = st.text_input("Order ID", value=transaction_number, key="oid_email")
 
 
 st.markdown("---")
@@ -258,7 +261,7 @@ if run:
             # Build the *exact* payload the FastAPI endpoint requires
             payload4 = {
                 "saas_transaction_id": derived_id,     # int or str is fine
-                "final_message": str(p3),            # ensure string
+                "final_message": str(r3.text),            # ensure string
             }
 
             r4 = POST("/orders/email", json=payload4, headers={"Content-Type":"application/json","accept":"application/json"})

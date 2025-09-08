@@ -113,50 +113,69 @@ class Fusion_SCM_Order_Toolkit(Toolkit):
 
 def test_case_create_sales_order():
     payload = {
-        "SourceTransactionNumber": "97414",
-        "SourceTransactionSystem": "OPS",
-        "SourceTransactionId": "97414",
-        "TransactionalCurrencyCode": "USD",
-        "BusinessUnitId": 300000046987012,
-        "BuyingPartyNumber": "10060",
-        #"TransactionTypeCode": "STD",
-        "RequestedShipDate": "2018-09-19T19:51:48+00:00",
-        "SubmittedFlag": 'true',
-        "FreezePriceFlag": 'false',
-        "FreezeShippingChargeFlag": 'false',
-        "FreezeTaxFlag": 'false',
-        "RequestingBusinessUnitId": 300000046987012,
-        # "billToCustomer": [{
-        #     "CustomerAccountId": 10060,
-        #     "SiteUseId": 300000047368662
-        # }],
-        # "shipToCustomer": [{
-        #     "PartyId": 10060,
-        #     "SiteId": 300000047368662
-        # }],
-        "lines": [{
-            "SourceTransactionLineId": "1",
-            "SourceTransactionLineNumber": "1",
-            "SourceScheduleNumber": "1",
-            "SourceTransactionScheduleId": "1",
-            "OrderedUOMCode": "zzu",
-            "OrderedQuantity": 10,
-            "ProductNumber": "AS7751100",
-            "FOBPoint": "Destination",
-            "FreightTerms": "Add freight",
-            "PaymentTerms": "30 Net",
-            "ShipmentPriority": "High"
-            # "RequestedFulfillmentOrganizationId": 204
-        }
-        ]
+  "SourceTransactionNumber": "R210_Sample_Order_ATOModel_227",
+  "SourceTransactionSystem": "OPS",
+  "SourceTransactionId": "R210_Sample_Order_ATOModel_227",
+  "TransactionalCurrencyCode": "USD",
+  "BusinessUnitId": 300000046987012,
+  "BuyingPartyNumber": "10060",
+  "TransactionTypeCode": "STD",
+  "RequestedShipDate": "2018-09-19T19:51:48+00:00",
+  "SubmittedFlag": "true",
+  "FreezePriceFlag": "false",
+  "FreezeShippingChargeFlag": "false",
+  "FreezeTaxFlag": "false",
+  "RequestingBusinessUnitId": 300000046987012,
+  "lines": [
+    {
+      "SourceTransactionLineId": "1",
+      "SourceTransactionLineNumber": "1",
+      "SourceScheduleNumber": "1",
+      "SourceTransactionScheduleId": "1",
+      "OrderedUOMCode": "zzu",
+      "OrderedQuantity": 10,
+      "ProductNumber": "AS6647431",
+      "FOBPoint": "Destination",
+      "FreightTerms": "Add freight",
+      "PaymentTerms": "30 Net",
+      "ShipmentPriority": "High"
+    },
+    {
+      "SourceTransactionLineId": "2",
+      "SourceTransactionLineNumber": "2",
+      "SourceScheduleNumber": "1",
+      "SourceTransactionScheduleId": "1",
+      "OrderedUOMCode": "zzu",
+      "OrderedQuantity": 5,
+      "ProductNumber": "AS6647432",
+      "FOBPoint": "Destination",
+      "FreightTerms": "Add freight",
+      "PaymentTerms": "30 Net",
+      "ShipmentPriority": "High"
+    },
+    {
+      "SourceTransactionLineId": "3",
+      "SourceTransactionLineNumber": "3",
+      "SourceScheduleNumber": "1",
+      "SourceTransactionScheduleId": "1",
+      "OrderedUOMCode": "zzu",
+      "OrderedQuantity": 15,
+      "ProductNumber": "AS6647433",
+      "FOBPoint": "Destination",
+      "FreightTerms": "Add freight",
+      "PaymentTerms": "30 Net",
+      "ShipmentPriority": "High"
     }
+  ]
+}
+
 
     toolkit = Fusion_SCM_Order_Toolkit()
     toolkit.create_sales_order(payload)
 
 def test_get_sales_order():
     #order_string = "finder=findBySourceOrderNumberAndSystem;SourceTransactionNumber=97414,SourceTransactionSystem=OPS"
-    order_string = "97414"
+    order_string = "R210_Sample_Order_ATOModel_230"
     
     toolkit = Fusion_SCM_Order_Toolkit()
     toolkit.get_sales_order(order_string)
@@ -167,6 +186,6 @@ def test_get_sales_order():
 #     toolkit.get_order_number(order_string)
 
 
-# if __name__ == "__main__":
-#     #test_case_create_sales_order()
-#     #test_get_sales_order()
+if __name__ == "__main__":
+    test_case_create_sales_order()
+    test_get_sales_order()
