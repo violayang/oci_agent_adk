@@ -8,12 +8,12 @@ st.caption("Master agent executes sub agents in serial with streaming logs and a
 # ---------------- Sidebar ----------------
 with st.sidebar:
     st.header("🔧 Configuration")
-    base_url = st.text_input("Base URL", value="https://9f9f2ab98469.ngrok-free.app", help="Root of your API (no trailing slash)")
+    base_url = st.text_input("Base URL", value="http://localhost:8080/", help="Root of your API (no trailing slash)")
     base_url = base_url.rstrip('/')
     timeout = st.number_input("HTTP Timeout (s)", value=60, min_value=1, max_value=600)
     st.markdown("---")
     st.subheader("Run server")
-    st.code("streamlit run app.py --server.address 0.0.0.0 --server.port 8505")
+    st.code("streamlit run app.py --server.address 0.0.0.0 --server.port 8080")
     st.markdown("---")
     transaction_number = st.text_input("Transaction Number", value="R250_Sample_Order_ATOModel_01")
 
@@ -184,11 +184,22 @@ if run:
         if q_image is not None:
             files = {"image": (q_image.name, q_image.getvalue(), q_image.type or "image/jpeg")}
         data = {"question": q_question}
+        print("/query/image: data is - ", data)
         r1 = POST("/query/image", files=files, data=data, headers={"accept":"application/json"})
+        # ------------  debug
         try:
             p1 = r1.json() if r1.headers.get("content-type","").startswith("application/json") else r1.text
         except Exception:
-            p1 = r1.text
+            # p1 = r1.text
+            p1 = " failed to decode"
+            print(" failed to decode")
+
+        # ------------- debug end
+        # try:
+        #     p1 = r1.json() if r1.headers.get("content-type","").startswith("application/json") else r1.text
+        # except Exception:
+        #     p1 = r1.text
+
         ok1 = r1.ok
         stream_log(f"Step 1 → HTTP {r1.status_code}")
         status_map["T1"] = STATUS_SUCCESS if ok1 else STATUS_FAIL
