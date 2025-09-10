@@ -1,0 +1,15 @@
+{
+  "message_id": "dummy-845b427888ac42ce8b016b2a10c88d96",
+  "timestamp": 1757472595,
+  "email": {
+    "to": [
+      "ops@example.com"
+    ],
+    "subject": "Sales Order Status for orderid : R250_Sample_Order_ATOModel_01",
+    "body": "{\"final_answer\":\"The sales order details for the order ID R250_Sample_Order_ATOModel_01 are: \\nOrder Number: 98526\\nSource Transaction Number: R250_Sample_Order_ATOModel_01\\nBusiness Unit: US1 Business Unit\\nTransaction Date: 2025-09-10T02:49:06+00:00\\nBuying Party: Computer Service and Rentals\\nStatus: Processing\"}",
+    "is_html": false,
+    "cc": [],
+    "bcc": [],
+    "attachments": []
+  }
+}

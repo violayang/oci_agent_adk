@@ -1,0 +1,15 @@
+{
+  "message_id": "dummy-0c091af157ff42e385bdcb83c186ff4c",
+  "timestamp": 1757477663,
+  "email": {
+    "to": [
+      "support@example.com"
+    ],
+    "subject": "Error Creating Sales Order",
+    "body": "Error creating sales order: 400 Client Error: Bad Request",
+    "is_html": false,
+    "cc": [],
+    "bcc": [],
+    "attachments": []
+  }
+}

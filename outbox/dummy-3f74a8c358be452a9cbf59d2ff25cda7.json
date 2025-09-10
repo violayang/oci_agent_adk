@@ -1,0 +1,15 @@
+{
+  "message_id": "dummy-3f74a8c358be452a9cbf59d2ff25cda7",
+  "timestamp": 1757469832,
+  "email": {
+    "to": [
+      "ops@example.com"
+    ],
+    "subject": "Sales Order Created for orderid : R210_Sample_Order_ATOModel_213",
+    "body": "The sales order details for orderid R210_Sample_Order_ATOModel_213 are: OrderNumber: 98506, BusinessUnitName: US1 Business Unit, BuyingPartyName: Computer Service and Rentals, TransactionOn: 2025-09-05T18:37:41+00:00, StatusCode: OPEN, Status: Processing",
+    "is_html": false,
+    "cc": [],
+    "bcc": [],
+    "attachments": []
+  }
+}

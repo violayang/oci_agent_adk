@@ -1,4 +1,3 @@
-
 import json, requests, streamlit as st
 
 st.set_page_config(page_title="Agent Orchestrator (Streaming)", page_icon="🤖", layout="wide")
@@ -8,12 +7,12 @@ st.caption("Master agent executes sub agents in serial with streaming logs and a
 # ---------------- Sidebar ----------------
 with st.sidebar:
     st.header("🔧 Configuration")
-    base_url = st.text_input("Base URL", value="http://localhost:8080/", help="Root of your API (no trailing slash)")
+    base_url = st.text_input("Base URL", value="http://localhost:8084/", help="Root of your API (no trailing slash)")
     base_url = base_url.rstrip('/')
     timeout = st.number_input("HTTP Timeout (s)", value=60, min_value=1, max_value=600)
     st.markdown("---")
     st.subheader("Run server")
-    st.code("streamlit run app.py --server.address 0.0.0.0 --server.port 8080")
+    st.code("streamlit run app.py --server.address 0.0.0.0 --server.port 8084")
     st.markdown("---")
     transaction_number = st.text_input("Transaction Number", value="R250_Sample_Order_ATOModel_01")
 
@@ -21,6 +20,8 @@ session = requests.Session()
 
 
 def _url(path: str) -> str:
+    print(f"url: {path}")
+    print(f"http://{base_url}{path}")
     return f"{base_url}{path if path.startswith('/') else '/' + path}"
 
 def GET(path, **kw):
@@ -62,7 +63,7 @@ with col2:
         "SourceScheduleNumber": "1",
         "SourceTransactionScheduleId": "1",
         "OrderedUOMCode": "zzu",
-        "OrderedQuantity": 5,
+        "OrderedQuantity": 10,
         "ProductNumber": "AS6647431",
         "FOBPoint": "Destination",
         "FreightTerms": "Add freight",
@@ -75,7 +76,7 @@ with col2:
         "SourceScheduleNumber": "1",
         "SourceTransactionScheduleId": "1",
         "OrderedUOMCode": "zzu",
-        "OrderedQuantity": 10,
+        "OrderedQuantity": 15,
         "ProductNumber": "AS6647432",
         "FOBPoint": "Destination",
         "FreightTerms": "Add freight",
@@ -88,7 +89,7 @@ with col2:
         "SourceScheduleNumber": "1",
         "SourceTransactionScheduleId": "1",
         "OrderedUOMCode": "zzu",
-        "OrderedQuantity": 15,
+        "OrderedQuantity": 10,
         "ProductNumber": "AS6647433",
         "FOBPoint": "Destination",
         "FreightTerms": "Add freight",
@@ -184,7 +185,6 @@ if run:
         if q_image is not None:
             files = {"image": (q_image.name, q_image.getvalue(), q_image.type or "image/jpeg")}
         data = {"question": q_question}
-        print("/query/image: data is - ", data)
         r1 = POST("/query/image", files=files, data=data, headers={"accept":"application/json"})
         # ------------  debug
         try:

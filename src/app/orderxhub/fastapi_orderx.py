@@ -2,10 +2,13 @@ from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Body
 from fastapi.responses import JSONResponse
 from pathlib import Path
 from typing import Dict
-import shutil
+import shutil, traceback, asyncio
 # from src.agents.agent_image2text import agent_flow
 from src.agents.create_sales_order import agent_create_sales_order
 import traceback, json, os
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 app = FastAPI()
 
@@ -24,10 +27,78 @@ async def ask_agent_from_image(
         # Build the prompt
         input_prompt = f"{str(temp_path)}   \n{question}"
         agent_image2text = agent_create_sales_order()
-        response = await agent_image2text.run_async(input_prompt, max_steps=5)
+        # print("----- agent_image2text response help: ----", help(agent_image2text))
+
+        # response = await agent_image2text.run_async(input_prompt, max_steps=5)
+
+        # Offload the synchronous call to a thread
+        response = await asyncio.to_thread(
+            agent_image2text.run,
+            input_prompt,
+            max_steps=5
+        )
+
+        ## ---- attempt to print/log agent tool/function call arguments
+        try:
+            def find_tool_calls(obj):
+                results = []
+                if isinstance(obj, dict):
+                    # OpenAI-style tool_calls
+                    tc_list = obj.get("tool_calls")
+                    if isinstance(tc_list, list):
+                        for tc in tc_list:
+                            fn = tc.get("function") or {}
+                            name = fn.get("name") or tc.get("name")
+                            args = fn.get("arguments") or tc.get("arguments")
+                            results.append({"name": name, "arguments": args})
+
+                    # OCI/agent common patterns
+                    for key in ("toolExecutionRequests", "toolExecutions"):
+                        if isinstance(obj.get(key), list):
+                            for item in obj[key]:
+                                name = item.get("name") or item.get("toolName")
+                                args = (
+                                        item.get("arguments")
+                                        or item.get("parameters")
+                                        or item.get("input")
+                                        or item.get("args")
+                                )
+                                results.append({"name": name, "arguments": args})
+
+                    # Recurse
+                    for v in obj.values():
+                        results.extend(find_tool_calls(v))
+                elif isinstance(obj, list):
+                    for it in obj:
+                        results.extend(find_tool_calls(it))
+                return results
+
+            tool_calls = find_tool_calls(response.data)
+
+            if tool_calls:
+                for i, tc in enumerate(tool_calls, 1):
+                    args = tc.get("arguments")
+                    # Try to parse JSON argument strings for readability
+                    try:
+                        if isinstance(args, str):
+                            parsed_args = json.loads(args)
+                        else:
+                            parsed_args = args
+                    except Exception:
+                        parsed_args = args
+                    logging.debug("Agent tool call %d: %s(%s)", i, tc.get("name"), parsed_args)
+            else:
+                logging.debug("No tool calls found in agent response.")
+
+            # Optional: log the whole raw response for debugging
+            logging.debug("Agent raw response: %s", json.dumps(response.data, indent=2, default=str))
+
+        except Exception as log_err:
+            logging.exception("Failed to extract tool call arguments: %s", log_err)
+
+        ## ---- end - attempt to print/log agent tool/function call arguments
 
         final_answer = response.data["message"]["content"]["text"]
-        print(final_answer)
 
         return JSONResponse(content={"final_answer": final_answer})
     
@@ -68,7 +139,8 @@ async def create_sales_order(payload: Dict = Body(...)):
         input_prompt = f"Create a sales order using a properly structured JSON payload:\n{payload_json}"
 
         agent_order = agent_create_sales_order()
-        response = await agent_order.run_async(input_prompt)
+        # response = await agent_order.run_async(input_prompt)
+        response = await asyncio.to_thread(agent_order.run, input_prompt)
 
         final_answer = response.data["message"]["content"]["text"]
         print(final_answer)
@@ -95,7 +167,8 @@ async def query_sales_order(input_prompt: str):
     """
     try:
         agent_get = agent_create_sales_order()
-        response = await agent_get.run_async(input_prompt)
+        response = await asyncio.to_thread(agent_get.run, input_prompt)
+        # response = await agent_get.run_async(input_prompt)
 
         final_answer = response.data["message"]["content"]["text"]
         print(final_answer)
@@ -142,8 +215,9 @@ async def email_sales_order(payload: SalesEmailRequest):
         )
 
         #input_prompt = f"Send an email to ops@example.com: subject: Sales Order Created for orderid : {saas_transaction_id}, body: {final_message}"
-    
-        response = await agent_order_email.run_async(input_prompt, max_steps=3)
+
+        response = await asyncio.to_thread(agent_order_email.run, input_prompt, max_steps=3)
+        # response = await agent_order_email.run_async(input_prompt, max_steps=3)
 
         final_answer = response.data["message"]["content"]["text"]
         print(final_answer)

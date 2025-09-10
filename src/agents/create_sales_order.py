@@ -20,6 +20,9 @@ from typing import Dict
 from oci.addons.adk import Agent, AgentClient, tool
 from pathlib import Path
 from dotenv import load_dotenv
+
+print("current directory: ", os.getcwd())
+
 from src.toolkit.fusion_scm_order_toolkit import Fusion_SCM_Order_Toolkit
 from src.tools.vision_instruct_tools import image_to_text
 from src.prompt_engineering.topics.order_assistant import prompt_order_assistant
@@ -72,6 +75,29 @@ def agent_create_sales_order():
     return create_sales_order_agent
 
 def test_agents():
+    def test_agents():
+        """
+        Tests the sales order automation agent by performing a series of operations.
+
+        The test involves:
+        1. Creating a sales order agent using the `agent_create_sales_order` function.
+        2. Animating a title to indicate the start of the test.
+        3. Defining a sample sales order payload and an image path.
+        4. Using the agent to:
+           - Extract information from an image related to an order.
+           - Create a sales order in Oracle SCM using the provided payload.
+           - Retrieve the created sales order by its ID.
+           - Send a confirmation email upon successful creation of the sales order.
+
+        The function prints the responses from the agent at each step.
+
+        Parameters:
+        None
+
+        Returns:
+        None
+        """
+        # Function implementation remains the same
 
     agent_order = agent_create_sales_order()
 
