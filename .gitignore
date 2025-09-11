@@ -13,3 +13,6 @@ data/1f013bec-81a4-4529-add7-75020f231a5d/header.bin
 .gitignore
 data/1f013bec-81a4-4529-add7-75020f231a5d/length.bin
 data/1f013bec-81a4-4529-add7-75020f231a5d/link_lists.bin
+*.log
+.idea/workspace.xml
+ outbox/

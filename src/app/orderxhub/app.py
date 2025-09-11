@@ -9,7 +9,7 @@ with st.sidebar:
     st.header("🔧 Configuration")
     base_url = st.text_input("Base URL", value="http://localhost:8084/", help="Root of your API (no trailing slash)")
     base_url = base_url.rstrip('/')
-    timeout = st.number_input("HTTP Timeout (s)", value=60, min_value=1, max_value=600)
+    timeout = st.number_input("HTTP Timeout (s)", value=180, min_value=1, max_value=600)
     st.markdown("---")
     st.subheader("Run server")
     st.code("streamlit run app.py --server.address 0.0.0.0 --server.port 8084")
@@ -50,7 +50,7 @@ with col2:
     "TransactionalCurrencyCode": "USD",
     "BusinessUnitId": 300000046987012,
     "BuyingPartyNumber": "10060",
-    "RequestedShipDate": "2018-09-19",
+    "RequestedShipDate": "2025-09-10",
     "SubmittedFlag": "true",
     "FreezePriceFlag": "false",
     "FreezeShippingChargeFlag": "false",
